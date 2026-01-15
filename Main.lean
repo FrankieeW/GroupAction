@@ -12,6 +12,7 @@ import Mathlib.Data.SetLike.Basic
 import Mathlib.Data.Fintype.Card
 import Mathlib.Algebra.Group.Basic
 import Mathlib.GroupTheory.Perm.Basic
+import Mathlib.Algebra.Group.Action.Defs
 -- import Mathlib.GroupTheory.Subgroup.Basic
 /-!
 # Project 1 : Group Actions
@@ -27,28 +28,40 @@ Addison–Wesley, 2003, Section 16 (Group Actions).
 
 
 /-! ## Definitions -/
--- Group action
-structure GroupAction (G : Type*) [Group G] (X : Type*) where
+-- Explicit definition of a group action on a fixed type X
+structure GroupActionStruct (G : Type*) [Group G] (X : Type*) where
   act : G → X → X
-  ga1 : ∀ (g1 g2 : G) (x : X), act (g1 * g2) x = act g1 (act g2 x)
-  ga2 : ∀ (x : X), act (1 : G) x = x
+  mul_act :
+    ∀ (g₁ g₂ : G) (x : X),
+      act (g₁ * g₂) x = act g₁ (act g₂ x)
+  one_act :
+    ∀ (x : X),
+      act (1 : G) x = x
 
--- Such X is called a G-set
-def IsGSet (G : Type*) [Group G] (X : Type*) :=
-  GroupAction G X
+-- A G-set structure on X, such X is called a G-set
+def GSetStructure (G : Type*) [Group G] (X : Type*) :=
+  GroupActionStruct G X
 
+/-
+Remark.
+This definition is equivalent to the standard typeclass
+`MulAction G X` in mathlib, but is written explicitly here
+to mirror the textbook definition and avoid typeclass machinery.
+-/
+#check MulAction
 /-! ## Example -/
 -- X = {1,2,...,n}, G = S_n (test my def)
 -- S_n is represented by Equiv.Perm (Fin n) in mathlib
-example (n : Nat) : IsGSet (Equiv.Perm (Fin n)) (Fin n) :=
-  { act := λ g x => g x
-    ga1 := by
-      intros g1 g2 x
-      rw [Equiv.Perm.mul_apply]
-    ga2 := by
+example (n : Nat) : GSetStructure (Equiv.Perm (Fin n)) (Fin n) :=
+  { act := λ σ x => σ x,
+    mul_act := by
+      intros σ₁ σ₂ x
+      simp only [Equiv.Perm.mul_apply],
+    one_act := by
       intro x
-      rw [Equiv.Perm.one_apply]
-  }
+      simp only [Equiv.Perm.one_apply]
+      }
+
 
 /-!
 ## Theorem: permutation representation
@@ -67,9 +80,4 @@ Moreover, for all g ∈ G and x ∈ X, we have φ(g)(x) = g • x.
 theorem groupActionToPermRepresentation
   {G : Type*} [Group G]
   {X : Type*} [SetLike X X]
-  (actX : IsGSet G X) :
-  ∃ (φ : G → Equiv.Perm X),
-    (∀ g : G, ∀ x : X, φ g x = actX.act g x) ∧
-    (∀ g1 g2 : G, φ (g1 * g2) = φ g1 * φ g2) ∧
-    (φ 1 = 1) := by
-  sorry
+  (actStruct : GSetStructure G X) :
