@@ -27,12 +27,9 @@ Addison–Wesley, 2003, Section 16 (Group Actions).
 
 
 /-! ## Definitions -/
--- Group action
--- class GroupAction (G : Type*) [Monoid G] (X : Type*) where
---   act : G → X → X
---   ga1 : ∀ (g1 g2 : G) (x : X), act (g1 * g2) x = act g1 (act g2 x)
---   ga2 : ∀ (x : X), act (1 : G) x = x
-
+-- Group action (G on X)
+-- (NOTE: G is a Monoid here, not necessarily a Group,
+--  because inverses are not needed for the definition)
 class GroupAction (G : Type*) [Monoid G] (X : Type*) where
   act : G → X → X
   ga_mul : ∀ g₁ g₂ x, act (g₁ * g₂) x = act g₁ (act g₂ x)
@@ -46,11 +43,11 @@ variable {G : Type*} [Group G] {X : Type*} [GroupAction G X]
 -- ## Example
 -- -/
 
--- example (g1 g2 : G) (x : X) :
---   GroupAction.act (g1 * g2) x = GroupAction.act g1 (GroupAction.act g2 x) :=
---   GroupAction.ga_mul g1 g2 x
--- -- The symmetric group on X is Equiv.Perm X
--- -- Its elements act on X by function application
+example (g1 g2 : G) (x : X) :
+  GroupAction.act (g1 * g2) x = GroupAction.act g1 (GroupAction.act g2 x) :=
+  GroupAction.ga_mul g1 g2 x
+-- The symmetric group on X is Equiv.Perm X
+-- Its elements act on X by function application
 
 
 
@@ -94,6 +91,7 @@ def sigmaPerm (g : G) : Equiv.Perm X :=
     left_inv := by
       intro x
       calc
+        -- Use the action axiom, then cancel with g⁻¹.
         GroupAction.act g⁻¹ (GroupAction.act g x) =
             GroupAction.act (g⁻¹ * g) x := by
           simpa using (GroupAction.ga_mul g⁻¹ g x).symm
@@ -105,6 +103,7 @@ def sigmaPerm (g : G) : Equiv.Perm X :=
     right_inv := by
       intro x
       calc
+        -- Symmetric calculation for g · (g⁻¹ · x).
         GroupAction.act g (GroupAction.act g⁻¹ x) =
             GroupAction.act (g * g⁻¹) x := by
           simpa using (GroupAction.ga_mul g g⁻¹ x).symm
@@ -127,6 +126,7 @@ lemma phi_apply (g : G) (x : X) : phi g x = GroupAction.act g x := rfl
   /-- `phi` is multiplicative: `phi (g₁ * g₂) = phi g₁ * phi g₂`. -/
   lemma phi_mul (g₁ g₂ : G) :
     phi (X := X) (g₁ * g₂) = phi (X := X) g₁ * phi (X := X) g₂ := by
+    -- Extensionality: it suffices to prove equality on each x.
     apply Equiv.ext
     intro (x : X)
     calc
@@ -150,8 +150,22 @@ theorem groupActionToPermRepresentation :
     (∀ g x, φ g x = GroupAction.act g x) ∧
     (∀ g₁ g₂, φ (g₁ * g₂) = φ g₁ * φ g₂) ∧
     (φ 1 = 1) := by
+  -- Compact term:
   exact ⟨phi, ⟨phi_apply, ⟨phi_mul, phi_one⟩⟩⟩
+  --
+  -- -- Expanded proof (step-by-step)(Powered by github copilot):
+  -- refine ⟨phi, ?_⟩ -- provide φ = phi
+  -- refine ⟨phi_apply, ?_⟩ -- provide φ g x = g • x
+  -- refine ⟨phi_mul, ?_⟩ -- provide φ (g₁ * g₂) = φ g₁ * φ g₂
+  -- exact phi_one -- provide φ 1 = 1
 
+-- Moreover, for all g ∈ G and x ∈ X, we have φ(g)(x) = g • x.
+theorem groupActionToPermRepresentation_apply
+  {g : G} {x : X} -- ∀ g ∈ G and x ∈ X
+  (φ : G → Equiv.Perm X) -- given φ
+  (hφ : (∀ g x, φ g x = GroupAction.act g x)) : -- we have φ(g)(x) = g • x
+  φ g x = GroupAction.act g x :=
+  hφ g x -- by definition of hφ
 
 
 /-!
@@ -169,10 +183,12 @@ def stabilizer (x : X) : Subgroup G := by
   exact
     { carrier := stabilizerSet (G := G) (X := X) x
       one_mem' := by
+        -- The identity fixes every x.
         simp [stabilizerSet, GroupAction.ga_one x]
       mul_mem' := by
         intro g₁ g₂ hg₁ hg₂
         calc
+          -- Closure under multiplication via the action axiom.
           GroupAction.act (g₁ * g₂) x = GroupAction.act g₁ (GroupAction.act g₂ x) := by
             simpa using (GroupAction.ga_mul g₁ g₂ x)
           _ = GroupAction.act g₁ x := by
@@ -181,17 +197,50 @@ def stabilizer (x : X) : Subgroup G := by
       inv_mem' := by
         intro g hg
         calc
+          -- If g fixes x, then g⁻¹ fixes x as well.
           GroupAction.act g⁻¹ x = GroupAction.act g⁻¹ (GroupAction.act g x) := by
             rw [hg]
           _ = GroupAction.act (g⁻¹ * g) x := by
             simpa using (GroupAction.ga_mul g⁻¹ g x).symm
           _ = GroupAction.act (1 : G) x := by simp
-          _ = x := GroupAction.ga_one x
-    }
-    
-/-- The stabilizer `G_x` as a subgroup of `G` (defined via choice). -/
-noncomputable def stabilizer_via_choice (x : X) : Subgroup G :=
-  Classical.choose (stabilizerSet_isSubgroup (G := G) (X := X) x)
-theorem stabilizer_carrier_via_choice (x : X) :
-    (stabilizer_via_choice (G := G) (X := X) x : Set G) = stabilizerSet (G := G) (X := X) x :=
-  Classical.choose_spec (stabilizerSet_isSubgroup (G := G) (X := X) x)
+          _ = x := GroupAction.ga_one x }
+
+
+/-- The stabilizer set is the carrier of a subgroup of `G`. -/
+theorem stabilizerSet_isSubgroup (x : X) :
+    ∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
+  refine ⟨stabilizer (G := G) (X := X) x, rfl⟩
+
+
+-- /-- The stabilizer set is the carrier of a subgroup of `G`. -/
+-- theorem stabilizerSet_isSubgroup' (x : X) :
+--     ∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
+--   use
+--     { carrier := stabilizerSet (G := G) (X := X) x
+--       one_mem' := by
+--         simp [stabilizerSet, GroupAction.ga_one x]
+--       mul_mem' := by
+--         intro g₁ g₂ hg₁ hg₂
+--         calc
+--           GroupAction.act (g₁ * g₂) x = GroupAction.act g₁ (GroupAction.act g₂ x) := by
+--             simpa using (GroupAction.ga_mul g₁ g₂ x)
+--           _ = GroupAction.act g₁ x := by
+--             rw [hg₂]
+--           _ = x := hg₁
+--       inv_mem' := by
+--         intro g hg
+--         calc
+--           GroupAction.act g⁻¹ x = GroupAction.act g⁻¹ (GroupAction.act g x) := by
+--             rw [hg]
+--           _ = GroupAction.act (g⁻¹ * g) x := by
+--             simpa using (GroupAction.ga_mul g⁻¹ g x).symm
+--           _ = GroupAction.act (1 : G) x := by simp
+--           _ = x := GroupAction.ga_one x
+--     }
+--   rfl
+-- /-- The stabilizer `G_x` as a subgroup of `G` (defined via choice). -/
+-- noncomputable def stabilizer_via_choice (x : X) : Subgroup G :=
+--   Classical.choose (stabilizerSet_isSubgroup' (G := G) (X := X) x)
+-- theorem stabilizer_carrier_via_choice (x : X) :
+--     (stabilizer_via_choice (G := G) (X := X) x : Set G) = stabilizerSet (G := G) (X := X) x :=
+--   Classical.choose_spec (stabilizerSet_isSubgroup' (G := G) (X := X) x)

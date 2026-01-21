@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{class}\PYG{+w}{ }\PYG{n}{GroupAction}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{G}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Type}\PYG{n+nb+bp}{*}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{[}\PYG{n}{Monoid}\PYG{+w}{ }\PYG{n}{G}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{X}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Type}\PYG{n+nb+bp}{*}\PYG{o}{)}\PYG{+w}{ }\PYG{n}{where}
+\PYG{+w}{  }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} The action map: apply g to x.}
+\PYG{+w}{  }\PYG{n}{act}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{G}\PYG{+w}{ }\PYG{n+nb+bp}{→}\PYG{+w}{ }\PYG{n}{X}\PYG{+w}{ }\PYG{n+nb+bp}{→}\PYG{+w}{ }\PYG{n}{X}
+\PYG{+w}{  }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Compatibility with multiplication in G.}
+\PYG{+w}{  }\PYG{n}{ga\PYGZus{}mul}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n+nb+bp}{∀}\PYG{+w}{ }\PYG{n}{g₁}\PYG{+w}{ }\PYG{n}{g₂}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{,}\PYG{+w}{ }\PYG{n}{act}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{g₁}\PYG{+w}{ }\PYG{n+nb+bp}{*}\PYG{+w}{ }\PYG{n}{g₂}\PYG{o}{)}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{act}\PYG{+w}{ }\PYG{n}{g₁}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{act}\PYG{+w}{ }\PYG{n}{g₂}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{)}
+\PYG{+w}{  }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} The identity element acts as the identity function.}
+\PYG{+w}{  }\PYG{n}{ga\PYGZus{}one}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n+nb+bp}{∀}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{,}\PYG{+w}{ }\PYG{n}{act}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{x}
+\end{MintedVerbatim}

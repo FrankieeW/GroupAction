@@ -1,0 +1,28 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{l+s+sd}{/\PYGZhy{}\PYGZhy{} The stabilizer `G\PYGZus{}x` as a subgroup of `G`. \PYGZhy{}/}
+\PYG{k+kd}{def}\PYG{+w}{ }\PYG{n}{stabilizer}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{X}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{Subgroup}\PYG{+w}{ }\PYG{n}{G}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}
+\PYG{+w}{  }\PYG{n}{exact}
+\PYG{+w}{    }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{n}{carrier}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{n}{stabilizerSet}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{G}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{n}{G}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{X}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{n}{X}\PYG{o}{)}\PYG{+w}{ }\PYG{n}{x}
+\PYG{+w}{      }\PYG{n}{one\PYGZus{}mem\PYGZsq{}}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}
+\PYG{+w}{        }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} The identity fixes every x.}
+\PYG{+w}{        }\PYG{n}{simp}\PYG{+w}{ }\PYG{o}{[}\PYG{n}{stabilizerSet}\PYG{o}{,}\PYG{+w}{ }\PYG{n}{GroupAction.ga\PYGZus{}one}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{]}
+\PYG{+w}{      }\PYG{n}{mul\PYGZus{}mem\PYGZsq{}}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}
+\PYG{+w}{        }\PYG{n}{intro}\PYG{+w}{ }\PYG{n}{g₁}\PYG{+w}{ }\PYG{n}{g₂}\PYG{+w}{ }\PYG{n}{hg₁}\PYG{+w}{ }\PYG{n}{hg₂}
+\PYG{+w}{        }\PYG{k}{calc}
+\PYG{+w}{          }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Closure under multiplication uses the action axiom.}
+\PYG{+w}{          }\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{g₁}\PYG{+w}{ }\PYG{n+nb+bp}{*}\PYG{+w}{ }\PYG{n}{g₂}\PYG{o}{)}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{n}{g₁}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{n}{g₂}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}
+\PYG{+w}{            }\PYG{n}{simpa}\PYG{+w}{ }\PYG{n}{using}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{GroupAction.ga\PYGZus{}mul}\PYG{+w}{ }\PYG{n}{g₁}\PYG{+w}{ }\PYG{n}{g₂}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{)}
+\PYG{+w}{          }\PYG{n}{\PYGZus{}}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{n}{g₁}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}
+\PYG{+w}{            }\PYG{n}{rw}\PYG{+w}{ }\PYG{o}{[}\PYG{n}{hg₂}\PYG{o}{]}
+\PYG{+w}{          }\PYG{n}{\PYGZus{}}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{n}{hg₁}
+\PYG{+w}{      }\PYG{n}{inv\PYGZus{}mem\PYGZsq{}}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}
+\PYG{+w}{        }\PYG{n}{intro}\PYG{+w}{ }\PYG{n}{g}\PYG{+w}{ }\PYG{n}{hg}
+\PYG{+w}{        }\PYG{k}{calc}
+\PYG{+w}{          }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} If g fixes x then g⁻¹ fixes x.}
+\PYG{+w}{          }\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{n}{g}\PYG{n+nb+bp}{⁻¹}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{n}{g}\PYG{n+nb+bp}{⁻¹}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{n}{g}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}
+\PYG{+w}{            }\PYG{n}{rw}\PYG{+w}{ }\PYG{o}{[}\PYG{n}{hg}\PYG{o}{]}
+\PYG{+w}{          }\PYG{n}{\PYGZus{}}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{g}\PYG{n+nb+bp}{⁻¹}\PYG{+w}{ }\PYG{n+nb+bp}{*}\PYG{+w}{ }\PYG{n}{g}\PYG{o}{)}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}
+\PYG{+w}{            }\PYG{n}{simpa}\PYG{+w}{ }\PYG{n}{using}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{GroupAction.ga\PYGZus{}mul}\PYG{+w}{ }\PYG{n}{g}\PYG{n+nb+bp}{⁻¹}\PYG{+w}{ }\PYG{n}{g}\PYG{+w}{ }\PYG{n}{x}\PYG{o}{)}\PYG{n+nb+bp}{.}\PYG{n}{symm}
+\PYG{+w}{          }\PYG{n}{\PYGZus{}}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{GroupAction.act}\PYG{+w}{ }\PYG{o}{(}\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{G}\PYG{o}{)}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{k+kd}{by}\PYG{+w}{ }\PYG{n}{simp}
+\PYG{+w}{          }\PYG{n}{\PYGZus{}}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{:=}\PYG{+w}{ }\PYG{n}{GroupAction.ga\PYGZus{}one}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\end{MintedVerbatim}

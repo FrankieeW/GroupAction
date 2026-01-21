@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.1.7)  20 JAN 2026 13:50
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.1.7)  21 JAN 2026 18:18
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1422,36 +1422,21 @@ Package hyperref Info: Link coloring OFF on input line 74.
 \openout6 = `report.out'.
 
  (out/report.toc
-LaTeX Font Info:    Trying to load font information for U+msa on input line 4.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 5.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 4.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 5.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 4.
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 5.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 ))
 \tf@toc=\write7
 \openout7 = `report.toc'.
 
-\pydata@fh@0=\write8
-\openout8 = `_E98D2F001DA5678B39482EFBDF5770DC.data.minted'.
-
-runsystem(latexminted config  --timestamp 20260120135036Z E98D2F001DA5678B39482EFBDF5770DC)...executed.
-
- (out/_E98D2F001DA5678B39482EFBDF5770DC.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20260120135036Z E98D2F001DA5678B39482EFBDF5770DC)...executed.
-
- (./out/_minted/default.style.minted) (./out/_minted/BC49DB8C47885633B6BE5B6C4CBE7B86.highlight.minted
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4.
-
-Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
-Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
-)
 File: ./figures/Imperial_College_London_new_logo.png Graphic file (type bmp)
 <./figures/Imperial_College_London_new_logo.png>
 
@@ -1464,7 +1449,108 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [1
 
-] [2] 
+]
+\pydata@fh@0=\write8
+\openout8 = `_E98D2F001DA5678B39482EFBDF5770DC.data.minted'.
+
+runsystem(latexminted config  --timestamp 20260121181845Z E98D2F001DA5678B39482EFBDF5770DC)...executed.
+
+ (out/_E98D2F001DA5678B39482EFBDF5770DC.config.minted)
+runsystem(latexminted cleanconfig  --timestamp 20260121181845Z E98D2F001DA5678B39482EFBDF5770DC)...executed.
+
+ (./out/_minted/default.style.minted) (./out/_minted/3E23F8A359413B8F299B756A2BDC7D5F.highlight.minted
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2.
+
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+) (./out/_minted/AF539302F3DF1D8F7DE0EAF53C3EF3EC.highlight.minted) [2] (./out/_minted/36F1E28C1BF4EE3DE5D1717440AB677C.highlight.minted
+Missing character: There is no ↦ (U+21A6) in font [lmmono10-italic]:!
+) (./out/_minted/10C3A33B11C87D595B9F63D3CC463F43.highlight.minted
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-italic]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-italic]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-italic]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+) (./out/_minted/511327CFE75DEB200BD1DEA078494498.highlight.minted
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+[3]
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+) (./out/_minted/5BB057BA76CBA60849685832975F78D1.highlight.minted
+Missing character: There is no ∃ (U+2203) in font [lmmono10-regular]:!
+Missing character: There is no φ (U+03C6) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no φ (U+03C6) in font [lmmono10-regular]:!
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no φ (U+03C6) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no φ (U+03C6) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no φ (U+03C6) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no φ (U+03C6) in font [lmmono10-regular]:!
+Missing character: There is no ⟨ (U+27E8) in font [lmmono10-regular]:!
+Missing character: There is no ⟨ (U+27E8) in font [lmmono10-regular]:!
+Missing character: There is no ⟨ (U+27E8) in font [lmmono10-regular]:!
+Missing character: There is no ⟩ (U+27E9) in font [lmmono10-regular]:!
+Missing character: There is no ⟩ (U+27E9) in font [lmmono10-regular]:!
+Missing character: There is no ⟩ (U+27E9) in font [lmmono10-regular]:!
+) (./out/_minted/E4D8C5F2AC8E336C584B94041C39A136.highlight.minted
+Missing character: There is no ∈ (U+2208) in font [lmmono10-italic]:!
+) (./out/_minted/2D616D62D93DEE3A4F71702A41FDDBCF.highlight.minted [4]
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ₂ (U+2082) in font [lmmono10-regular]:!
+Missing character: There is no ₁ (U+2081) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-italic]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+Missing character: There is no ⁻ (U+207B) in font [lmmono10-regular]:!
+) (./out/_minted/59EE46799FDAA514AA78AFB190BEE350.highlight.minted
+Missing character: There is no ∃ (U+2203) in font [lmmono10-regular]:!
+Missing character: There is no ⟨ (U+27E8) in font [lmmono10-regular]:!
+Missing character: There is no ⟩ (U+27E9) in font [lmmono10-regular]:!
+) [5] [6] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
 (out/report.aux)
  ***********
@@ -1472,18 +1558,18 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-29>
  ***********
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 5EB31FFB7012CB7D96A98AFE77F25485;412.
+(rerunfilecheck)             Checksum: EC9AEE6AB6DAA901F2E384EA32CC7BC1;2089.
 Package logreq Info: Writing requests to 'report.run.xml'.
 \openout1 = `report.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 54588 strings out of 468179
- 1260240 string characters out of 5433208
- 2376414 words of memory out of 5000000
- 82478 multiletter control sequences out of 15000+600000
- 636403 words of font info for 86 fonts, out of 8000000 for 9000
+ 54688 strings out of 468179
+ 1264434 string characters out of 5433208
+ 2379426 words of memory out of 5000000
+ 82552 multiletter control sequences out of 15000+600000
+ 636411 words of font info for 87 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  114i,12n,122p,1296b,3962s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on out/report.xdv (2 pages, 25740 bytes).
+Output written on out/report.xdv (6 pages, 165532 bytes).
