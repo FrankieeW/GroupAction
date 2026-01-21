@@ -164,36 +164,6 @@ let Gₓ = { g ∈  G | g x = x } , X_g = { x ∈  X | g x = x } .
 def stabilizerSet (x : X) : Set G :=
   { g : G | GroupAction.act g x = x }
 
-
-/-- The stabilizer set is the carrier of a subgroup of `G`. -/
-theorem stabilizerSet_isSubgroup (x : X) :
-    ∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
-  use
-    { carrier := stabilizerSet (G := G) (X := X) x
-      one_mem' := by
-        simp [stabilizerSet, GroupAction.ga_one x]
-      mul_mem' := by
-        intro g₁ g₂ hg₁ hg₂
-        calc
-          GroupAction.act (g₁ * g₂) x = GroupAction.act g₁ (GroupAction.act g₂ x) := by
-            simpa using (GroupAction.ga_mul g₁ g₂ x)
-          _ = GroupAction.act g₁ x := by
-            rw [hg₂]
-          _ = x := hg₁
-      inv_mem' := by
-        intro g hg
-        calc
-          GroupAction.act g⁻¹ x = GroupAction.act g⁻¹ (GroupAction.act g x) := by
-            rw [hg]
-          _ = GroupAction.act (g⁻¹ * g) x := by
-            simpa using (GroupAction.ga_mul g⁻¹ g x).symm
-          _ = GroupAction.act (1 : G) x := by simp
-          _ = x := GroupAction.ga_one x
-    }
-  rfl
-
-
-
 /-- The stabilizer `G_x` as a subgroup of `G`. -/
 def stabilizer (x : X) : Subgroup G := by
   exact
