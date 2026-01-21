@@ -46,7 +46,7 @@
 \newcommand\nb{\addtocounter{equation}{1}\tag{\theequation}}
 \pgfplotsset{compat=1.18}
 %
-\renewcommand{\thesection}{Exercise \arabic{section}}
+% \renewcommand{\thesection}{Exercise \arabic{section}}
 
 %
 
@@ -78,5 +78,40 @@
 %----------------------------------------------------------------------------------------
 % ASSIGNMENT CONTENT
 %----------------------------------------------------------------------------------------
+\section{Introduction}
+This is my submission for Coursework 1 of MATH70040-Formalising Mathematics, on the topic of Group Actions. In this project, I formalise the definition of group actions, and prove some basic properties about them using Lean.
+The Main Theorm is
+\begin{quote}
+\textbf{Theorem:} Let \(X\) be a \(G\)-Set, for each \(g \in G\), the map \(\varphi_g : X \to X\) defined by \(\varphi_g(x) = g \cdot x\) is a permutation of \(X\). Also the map \(\Phi : G \to S_X\) defined by \(\Phi(g) = \varphi_g\) is a group homomorphism with the property that for all \(g \in G\) and \(x \in X\), \(\Phi(g)(x) = g \cdot x\).
+\end{quote}
+% The theorm is come from the textbook written by Fraleigh and Katz \cite{fraleigh2003first}.
+% John B. Fraleigh, Victor J. Katz, *A First Course in Abstract Algebra*,
+% Addison–Wesley, 2003, Section 16 (Group Actions).
+\section{Definitions}
+In this section, I define the basic notions of group actions, including the definition of a group action, and some examples of group actions.
+\subsection{Lean Code}
+\begin{minted}[frame=lines,
+  framesep=2mm,
+  baselinestretch=1.2,
+  fontsize=\footnotesize,
+  linenos,
+  % numbers=right,
+  ]{lean}
+/-! ## Definitions -/
+-- Group action
+class GroupAction (G : Type*) [Monoid G] (X : Type*) where
+  act : G → X → X
+  ga1 : ∀ (g1 g2 : G) (x : X), act (g1 * g2) x = act g1 (act g2 x)
+  ga2 : ∀ (x : X), act (1 : G) x = x
+
+variable {G : Type*} [Group G] {X : Type*} [GroupAction G X]
+/-!
+\end{minted}
+\section{Main Theorem}
+
+%Reference Section
+
+
+
 
 \end{document}
