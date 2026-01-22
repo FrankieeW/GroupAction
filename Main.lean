@@ -80,11 +80,13 @@ Moreover, for all g ∈ G and x ∈ X, we have φ(g)(x) = g • x.
 --     (φ 1 = 1) := by
 --   sorry
 
-/-- The action map `sigma g : X → X` given by `x ↦ g • x`. -/
+/-- The action map `sigma g : X → X`
+    given by `x ↦ g • x`. -/
 def sigma (g : G) : X → X :=
   fun x => GroupAction.act g x
 
-/-- The permutation of `X` induced by `g`, with inverse given by `g⁻¹`. -/
+/-- The permutation of `X` induced by `g`,
+    with inverse given by `g⁻¹`. -/
 def sigmaPerm (g : G) : Equiv.Perm X :=
   { toFun := sigma g
     invFun := sigma g⁻¹
@@ -113,7 +115,8 @@ def sigmaPerm (g : G) : Equiv.Perm X :=
           simp
         _ = x := GroupAction.ga_one x }
 
-/-- The permutation representation `phi : G → Equiv.Perm X` induced by the action. -/
+/-- The permutation representation `phi : G → Equiv.Perm X`
+    induced by the action. -/
 def phi (g : G) : Equiv.Perm X :=
   sigmaPerm g
 
@@ -126,7 +129,8 @@ lemma phi_apply (g : G) (x : X) : phi g x = GroupAction.act g x := rfl
   /-- `phi` is multiplicative: `phi (g₁ * g₂) = phi g₁ * phi g₂`. -/
   lemma phi_mul (g₁ g₂ : G) :
     phi (X := X) (g₁ * g₂) = phi (X := X) g₁ * phi (X := X) g₂ := by
-    -- Extensionality: it suffices to prove equality on each x.
+    -- Extensionality: it suffices to prove equality
+    -- on each x.
     apply Equiv.ext
     intro (x : X)
     calc
@@ -153,28 +157,37 @@ theorem groupActionToPermRepresentation :
   -- Compact term:
   exact ⟨phi, ⟨phi_apply, ⟨phi_mul, phi_one⟩⟩⟩
   --
-  -- -- Expanded proof (step-by-step)(Powered by github copilot):
+  -- -- Expanded proof (step-by-step)
+  -- -- (Powered by GitHub Copilot):
   -- refine ⟨phi, ?_⟩ -- provide φ = phi
   -- refine ⟨phi_apply, ?_⟩ -- provide φ g x = g • x
   -- refine ⟨phi_mul, ?_⟩ -- provide φ (g₁ * g₂) = φ g₁ * φ g₂
   -- exact phi_one -- provide φ 1 = 1
 
--- Moreover, for all g ∈ G and x ∈ X, we have φ(g)(x) = g • x.
+-- Moreover, for all g ∈ G and x ∈ X,
+-- we have φ(g)(x) = g • x.
 theorem groupActionToPermRepresentation_apply
-  {g : G} {x : X} -- ∀ g ∈ G and x ∈ X
-  (φ : G → Equiv.Perm X) -- given φ
-  (hφ : (∀ g x, φ g x = GroupAction.act g x)) : -- we have φ(g)(x) = g • x
+  -- For all g ∈ G and x ∈ X.
+  {g : G} {x : X}
+  -- Given φ.
+  (φ : G → Equiv.Perm X)
+  -- We have φ(g)(x) = g • x.
+  (hφ : ∀ g x, φ g x = GroupAction.act g x) :
   φ g x = GroupAction.act g x :=
-  hφ g x -- by definition of hφ
+  -- By definition of hφ.
+  hφ g x
 
 
 /-!
-# stabilizer (isotropy subgroup)
-## Theorem: Let X be a G-set. Then Gₓ  , is a subgroup of G for each x ∈ X.
-Let X be a G-set. Let x € X and g € G . I t will be important to know when g x = x . W e
-let Gₓ = { g ∈  G | g x = x } , X_g = { x ∈  X | g x = x } .
+# Stabilizer (isotropy subgroup)
+## Theorem: Let X be a G-set. Then Gₓ is a subgroup of G for each x ∈ X.
+
+Let X be a G-set. Let x ∈ X and g ∈ G. It will be important to know
+when g x = x. We let
+Gₓ = { g ∈ G | g x = x }, X_g = { x ∈ X | g x = x }.
 -/
-/-- The stabilizer set `G_x = { g ∈ G | g • x = x }`. -/
+/-- The stabilizer set
+    `G_x = { g ∈ G | g • x = x }`. -/
 def stabilizerSet (x : X) : Set G :=
   { g : G | GroupAction.act g x = x }
 
