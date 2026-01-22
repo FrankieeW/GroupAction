@@ -16,7 +16,9 @@ import Mathlib.GroupTheory.Perm.Basic
 # Project 1 : Group Actions
 
 ## Overview
-We define group actions and show they yield permutation representations.
+This file introduces a custom `GroupAction` and builds the permutation
+representation `phi : G → Equiv.Perm X`, then proves basic properties
+such as multiplicativity and the stabilizer subgroup.
 
 ## References
 John B. Fraleigh, Victor J. Katz, *A First Course in Abstract Algebra*,
@@ -25,10 +27,8 @@ Addison–Wesley, 2003, Section 16 (Group Actions).
 
 
 
-/-! ## Definitions -/
--- Group action (G on X)
--- (NOTE: G is a Monoid here, not necessarily a Group,
---  because inverses are not needed for the definition)
+/-! ## Definitions: group actions -/
+/-- Defines a group action of a monoid `G` on a type `X`. The action is given by `act : G → X → X`, satisfying the axioms `ga_mul` and `ga_one`. -/
 class GroupAction (G : Type*) [Monoid G] (X : Type*) where
   act : G → X → X
   ga_mul : ∀ g₁ g₂ x, act (g₁ * g₂) x = act g₁ (act g₂ x)
@@ -39,18 +39,24 @@ variable {G : Type*} [Group G] {X : Type*} [GroupAction G X]
 
 
 -- /-!
--- ## Example
+-- ## Example (commented out)
+-- A sanity check of the action axiom.
 -- -/
+-- example (g1 g2 : G) (x : X) :
+--   GroupAction.act (g1 * g2) x = GroupAction.act g1 (GroupAction.act g2 x) :=
+--   GroupAction.ga_mul g1 g2 x
+-- -- The symmetric group on `X` is `Equiv.Perm X`.
+-- -- Its elements act on `X` by function application.
 
-example (g1 g2 : G) (x : X) :
-  GroupAction.act (g1 * g2) x = GroupAction.act g1 (GroupAction.act g2 x) :=
-  GroupAction.ga_mul g1 g2 x
--- The symmetric group on X is Equiv.Perm X
--- Its elements act on X by function application
-
-
-
-
+/-- The symmetric group `Equiv.Perm X` acts on `X` by evaluation. -/
+instance permGroupAction (X : Type*) : GroupAction (Equiv.Perm X) X :=
+  { act := fun g x => g x
+    ga_mul := by
+      intro g1 g2 x
+      rfl
+    ga_one := by
+      intro x
+      rfl }
 
 
 
@@ -58,86 +64,92 @@ example (g1 g2 : G) (x : X) :
 
 ## Theorem: permutation representation
 
-Let X be a G-set.
+Let `X` be a `G`-set.
 
-1. For each g ∈ G, define σ_g : X → X by σ_g(x) = g • x.
-   Then σ_g is a permutation of X, i.e. a bijection X → X.
+1. For each `g ∈ G`, define `σ_g : X → X` by `σ_g(x) = g • x`.
+   This map is a permutation of `X` (a bijection).
+2. Define `φ : G → Sym X` by `φ(g) = σ_g`.
+   This map is a group homomorphism.
 
-2. Define a map φ : G → Sym X by φ(g) = σ_g.
-   Then φ is a group homomorphism.
-
-Moreover, for all g ∈ G and x ∈ X, we have φ(g)(x) = g • x.
+Moreover, for all `g ∈ G` and `x ∈ X`, we have `φ(g)(x) = g • x`.
 -/
 
+-- The following statement is a commented-out sketch of the main theorem.
 -- theorem groupActionToPermRepresentation
 --   {G : Type*} [Group G]
 --   {X : Type*} [GroupAction G X]
 --   (actX : GroupAction G X) :
---   ∃ (φ : G → Equiv.Perm X), -- Equiv.Perm X is Lean's Sym X
+--   ∃ (φ : G → Equiv.Perm X), -- `Equiv.Perm X` is Lean's `Sym X`.
 --     (∀ g : G, ∀ x : X, φ g x = actX.act g x) ∧
 --     (∀ g1 g2 : G, φ (g1 * g2) = φ g1 * φ g2) ∧
 --     (φ 1 = 1) := by
 --   sorry
 
-/-- The action map `sigma g : X → X`
-    given by `x ↦ g • x`. -/
+/-- Defines the action map `σ_g : X → X` by `x ↦ g • x`. -/
 def sigma (g : G) : X → X :=
   fun x => GroupAction.act g x
 
-/-- The permutation of `X` induced by `g`,
-    with inverse given by `g⁻¹`. -/
+/-- Defines the permutation of `X` induced by `g`.
+    The inverse is given by the action of `g⁻¹`. -/
 def sigmaPerm (g : G) : Equiv.Perm X :=
   { toFun := sigma g
     invFun := sigma g⁻¹
     left_inv := by
       intro x
       calc
-        -- Use the action axiom, then cancel with g⁻¹.
+        -- Step 1: combine `g⁻¹` and `g` using the action axiom.
         GroupAction.act g⁻¹ (GroupAction.act g x) =
             GroupAction.act (g⁻¹ * g) x := by
           simpa using (GroupAction.ga_mul g⁻¹ g x).symm
+        -- Step 2: simplify `g⁻¹ * g` to `1`.
         _ = GroupAction.act (1 : G) x := by
-          -- simpa using
-          --   congrArg (fun t => GroupAction.act t x) (inv_mul_cancel g)
+          -- Alternative: use `congrArg` with `inv_mul_cancel g`.
+          -- congrArg (fun t => GroupAction.act t x) (inv_mul_cancel g)
           simp
+        -- Step 3: the identity acts as the identity on `X`.
         _ = x := GroupAction.ga_one x
     right_inv := by
       intro x
       calc
-        -- Symmetric calculation for g · (g⁻¹ · x).
+        -- Step 1: combine `g` and `g⁻¹` using the action axiom.
         GroupAction.act g (GroupAction.act g⁻¹ x) =
             GroupAction.act (g * g⁻¹) x := by
           simpa using (GroupAction.ga_mul g g⁻¹ x).symm
+        -- Step 2: simplify `g * g⁻¹` to `1`.
         _ = GroupAction.act (1 : G) x := by
-          -- simpa using
-          --   congrArg (fun t => GroupAction.act t x) (mul_inv_cancel g)
+          -- Alternative: use `congrArg` with `mul_inv_cancel g`.
+          -- congrArg (fun t => GroupAction.act t x) (mul_inv_cancel g)
           simp
+        -- Step 3: the identity acts as the identity on `X`.
         _ = x := GroupAction.ga_one x }
 
-/-- The permutation representation `phi : G → Equiv.Perm X`
-    induced by the action. -/
+/-- Defines the permutation representation `phi : G → Equiv.Perm X`.
+    This sends `g` to the permutation `σ_g`. -/
 def phi (g : G) : Equiv.Perm X :=
   sigmaPerm g
 
-/-! The action and the permutation representation agree on elements of `X`. -/
+/-- `phi` agrees with the action on each element of `X`. -/
 lemma phi_apply (g : G) (x : X) : phi g x = GroupAction.act g x := rfl
 
 
+-- /-- A commented-out attempt at proving multiplicativity of `phi`. -/
 -- lemma phi_mul : ∀ (g₁ g₂ : G), phi (g₁ * g₂) = phi g₁ * phi g₂ := by
-  -- sorry -- error
-  /-- `phi` is multiplicative: `phi (g₁ * g₂) = phi g₁ * phi g₂`. -/
-  lemma phi_mul (g₁ g₂ : G) :
-    phi (X := X) (g₁ * g₂) = phi (X := X) g₁ * phi (X := X) g₂ := by
-    -- Extensionality: it suffices to prove equality
-    -- on each x.
-    apply Equiv.ext
-    intro (x : X)
-    calc
-      phi (g₁ * g₂) x = GroupAction.act (g₁ * g₂) x := rfl
-      _ = GroupAction.act g₁ (GroupAction.act g₂ x) := GroupAction.ga_mul g₁ g₂ x
+--   sorry
+/-- Shows that `phi` respects multiplication:
+    `phi (g₁ * g₂) = phi g₁ * phi g₂`. -/
+lemma phi_mul (g₁ g₂ : G) :
+  phi (X := X) (g₁ * g₂) = phi (X := X) g₁ * phi (X := X) g₂ := by
+  -- Extensionality reduces equality of permutations to pointwise equality.
+  apply Equiv.ext
+  intro (x : X)
+  calc
+    -- Step 1: expand `phi` and the action definition.
+    phi (g₁ * g₂) x = GroupAction.act (g₁ * g₂) x := rfl
+    -- Step 2: use the action axiom to separate `g₁` and `g₂`.
+    _ = GroupAction.act g₁ (GroupAction.act g₂ x) := GroupAction.ga_mul g₁ g₂ x
 
 
-/-! `phi 1` is the identity permutation. -/
+/-- `phi 1` is the identity permutation. -/
 lemma phi_one : phi (1 : G) = (1 : Equiv.Perm X) := by
   apply Equiv.ext
   intro (x : X)
@@ -147,7 +159,7 @@ lemma phi_one : phi (1 : G) = (1 : Equiv.Perm X) := by
     _ = (1 : Equiv.Perm X) x := by
       simp [Equiv.Perm.one_apply]
 
-/-! The action yields a permutation representation. -/
+/-- The action yields a permutation representation. -/
 theorem groupActionToPermRepresentation :
   ∃ (φ : G → Equiv.Perm X),
     (∀ g x, φ g x = GroupAction.act g x) ∧
@@ -156,15 +168,15 @@ theorem groupActionToPermRepresentation :
   -- Compact term:
   exact ⟨phi, ⟨phi_apply, ⟨phi_mul, phi_one⟩⟩⟩
   --
-  -- -- Expanded proof (step-by-step)
-  -- -- (Powered by GitHub Copilot):
+   -- Expanded proof (step-by-step):
   -- refine ⟨phi, ?_⟩ -- provide φ = phi
-  -- refine ⟨phi_apply, ?_⟩ -- provide φ g x = g • x
-  -- refine ⟨phi_mul, ?_⟩ -- provide φ (g₁ * g₂) = φ g₁ * φ g₂
-  -- exact phi_one -- provide φ 1 = 1
+    -- refine ⟨phi_apply, ?_⟩ -- provide φ g x = g • x
+    -- refine ⟨phi_mul, ?_⟩ -- provide φ (g₁ * g₂) = φ g₁ * φ g₂
+    -- exact phi_one -- provide φ 1 = 1
 
 -- Moreover, for all g ∈ G and x ∈ X,
 -- we have φ(g)(x) = g • x.
+/-- For the permutation representation `φ`, we have `φ g x = g • x` for all `g` and `x`. -/
 theorem groupActionToPermRepresentation_apply
   -- For all g ∈ G and x ∈ X.
   {g : G} {x : X}
@@ -176,6 +188,72 @@ theorem groupActionToPermRepresentation_apply
   -- By definition of hφ.
   hφ g x
 
+
+--  some example
+-- Every group G i s itself a G-set, where the action on g2 ∈  G by g 1 ∈  G is given by lett
+-- multiplication. That is, *(g1, g2) = g1g2. I f H is a subgroup of G , we can also regard G
+-- as an H-set, where * (h, g) = hg.
+
+instance groupAsGSet (G : Type*) [Group G] : GroupAction G G :=
+  { act := fun g1 g2 => g1 * g2
+    ga_mul := by
+      intro g1 g2 g3
+      rw [mul_assoc]
+    ga_one := by
+      intro g
+      rw [one_mul] }
+
+
+instance subgroupAsGSet {G : Type*} [Group G] (H : Subgroup G) : GroupAction H G :=
+  { act := fun h g => (h : G) * g
+    ga_mul := by
+      intros
+      -- simp
+      -- rw [mul_assoc]
+      simp [mul_assoc]
+    ga_one := by
+      intros
+      simp
+  }
+
+instance subgroupAsGSet_conjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
+  { act := fun h g => h * g * h⁻¹
+    ga_mul := by
+      intro g₁ g₂ g₃
+      -- simp [mul_assoc]
+      simp
+      rw [ ← mul_assoc g₁]
+      rw [mul_assoc g₁ g₂]
+      rw [← mul_assoc]
+    ga_one := by
+      intros
+      simp
+  }
+instance vectorSpaceAsCStarSet (n : ℕ) :
+    GroupAction (ℂˣ) (Fin n → ℂ) :=
+  { act := fun r v => fun i => (r : ℂ) * v i
+    ga_mul := by
+      intros r1 r2 v
+      ext i
+      simp [mul_assoc]
+    ga_one := by
+      intro v
+      ext i
+      simp
+  }
+instance vectorSpaceAsRStarSet (n : ℕ) :
+    GroupAction (ℝˣ) (Fin n → ℝ) :=
+  -- using vectorSpaceAsCStarSet
+  { act := fun r v => fun i => (r : ℝ) * v i
+    ga_mul := by
+      intros r1 r2 v
+      ext i
+      simp [mul_assoc]
+    ga_one := by
+      intro v
+      ext i
+      simp
+  }
 
 /-!
 # Stabilizer (isotropy subgroup)
