@@ -1,3 +1,6 @@
+% Copyright (c) 2026 Frankie Feng-Cheng WANG. All rights reserved.
+% Repository: https://github.com/FrankieeW/formalising-mathematics-notes
+
 %%% Identification
 
 \NeedsTeXFormat{LaTeX2e} % We need to have LaTeX2e for this to compile

@@ -1,0 +1,31 @@
+# AI artifacts
+.sisyphus/
+
+# LaTeX build artifacts
+Report/out/
+Report/_minted*/
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.xdv
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# LaTeX temporary files
+*.tmp
+*.bak*
+*.sav
+~$*.tex
+*.swp
+*.swo
+*~
+
+# Editor/system files
+.DS_Store
+indent.log

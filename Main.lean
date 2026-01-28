@@ -1,11 +1,10 @@
 /-
 Title: Main.lean
-Author: Frankie Wang
+Project: Project 1 (Group Actions)
+Author: Frankie Feng-Cheng WANG
 Date: June 2026
-Copyright (c) 2026 Frankie Wang. All rights reserved.
-Contact: contact@frankie.wang
-License: MIT
-Github: https://github.com/FrankieeW/
+Copyright (c) 2026 Frankie Feng-Cheng WANG. All rights reserved.
+Repository: https://github.com/FrankieeW/formalising-mathematics-notes
 -/
 import Mathlib.Tactic
 import Mathlib.Data.SetLike.Basic

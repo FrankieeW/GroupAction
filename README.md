@@ -1,6 +1,24 @@
 # Project 1: Group Actions
 
+Copyright (c) 2026 Frankie Feng-Cheng WANG. All rights reserved. Repository: https://github.com/FrankieeW/formalising-mathematics-notes
+
 This folder contains a Lean 4 formalisation of basic group action theory, focusing on the permutation representation induced by an action and the stabilizer subgroup of a point.
+
+## Table of contents
+
+- [Project 1: Group Actions](#project-1-group-actions)
+  - [Table of contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Files](#files)
+  - [Mathematical focus](#mathematical-focus)
+  - [Prerequisites](#prerequisites)
+  - [How to check the project](#how-to-check-the-project)
+  - [Conventions](#conventions)
+  - [Version history](#version-history)
+  - [Progress](#progress)
+    - [v1.0 completed](#v10-completed)
+    - [v1.0 next improvements（planned by AI）](#v10-next-improvementsplanned-by-ai)
+  - [References](#references)
 
 ## Overview
 
@@ -8,7 +26,7 @@ This folder contains a Lean 4 formalisation of basic group action theory, focusi
 - Builds the permutation representation `phi : G → Equiv.Perm X`.
 - Proves core lemmas about `phi` and the stabilizer subgroup.
 
-## Contents
+## Files
 
 - `Main.lean` defines `GroupAction`, `sigma`, `phi`, and stabilizer constructions.
 - `Test.lean` is empty and can be used for scratch work.
@@ -43,6 +61,30 @@ lake build
 - Imports live at the top of the file.
 - Proofs use readable tactic scripts (`intro`, `apply`, `simp`) with two-space indentation.
 - Names like `hP` denote hypotheses, and `P Q R` are propositions.
+
+## Version history
+
+- v1.0 (first release)
+
+## Progress
+
+### v1.0 completed
+
+- Defined a minimal `GroupAction` class and core action API.
+- Constructed the permutation representation `phi : G → Equiv.Perm X`.
+- Formalised stabilizer sets and their subgroup structure.
+- Wrote a reader-facing report with Lean excerpts.
+- Added a checklist for self/AI scoring in `Project1/Report/checklist.md`.
+
+### v1.0 next improvements（planned by AI）
+
+- Add a brief glossary of Lean tactics used (e.g., `simp`, `ring_nf`).
+- Include a short example showing how to run `lake env lean` on `Project1/Main.lean`.
+- Add a one-paragraph roadmap outlining possible extensions (orbit-stabilizer, action on cosets).
+- Clarify where the custom `GroupAction` diverges from `MulAction` and why.
+- Provide a small commutative diagram showing `G → Sym(X)` and evaluation at `x`.
+- Add a short appendix listing the main lemmas and where they appear in `Main.lean`.
+- Add one example instantiation (e.g., `G = S₃` acting on `{1,2,3}`).
 
 ## References
 

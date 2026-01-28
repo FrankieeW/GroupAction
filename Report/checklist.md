@@ -1,5 +1,7 @@
 # Checklist and Self/AI Scoring
 
+Copyright (c) 2026 Frankie Feng-Cheng WANG. All rights reserved. Repository: https://github.com/FrankieeW/formalising-mathematics-notes
+
 ## Checklist
 
 - Lean code included (target 150–200 lines with comments).
@@ -21,7 +23,8 @@
 
 | Criterion | AI score ( / 10 ) |
 | --- | --- |
-| Lean formalisation completeness |  |
-| Clarity for non-Lean readers |  |
-| Proof readability |  |
-| Report structure and pacing |  |
+| Lean formalisation completeness | 8.5 |
+| Clarity for non-Lean readers | 8.0 |
+| Proof readability | 7.5 |
+| Report structure and pacing | 8.0 |
+
