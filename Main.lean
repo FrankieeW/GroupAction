@@ -75,7 +75,7 @@ Moreover, for all `g ∈ G` and `x ∈ X`, we have `φ(g)(x) = g • x`.
 -/
 
 -- The following statement is a commented-out sketch of the main theorem.
--- theorem groupActionToPermRepresentation
+-- theorem group_action_to_perm_representation
 --   {G : Type*} [Group G]
 --   {X : Type*} [GroupAction G X]
 --   (actX : GroupAction G X) :
@@ -160,7 +160,7 @@ lemma phi_one : phi (1 : G) = (1 : Equiv.Perm X) := by
       simp [Equiv.Perm.one_apply]
 
 /-- The action yields a permutation representation. -/
-theorem groupActionToPermRepresentation :
+theorem group_action_to_perm_representation :
   ∃ (φ : G → Equiv.Perm X),
     (∀ g x, φ g x = GroupAction.act g x) ∧
     (∀ g₁ g₂, φ (g₁ * g₂) = φ g₁ * φ g₂) ∧
@@ -177,7 +177,7 @@ theorem groupActionToPermRepresentation :
 -- Moreover, for all g ∈ G and x ∈ X,
 -- we have φ(g)(x) = g • x.
 /-- For the permutation representation `φ`, we have `φ g x = g • x` for all `g` and `x`. -/
-theorem groupActionToPermRepresentation_apply
+theorem group_action_to_perm_representation_apply
   -- For all g ∈ G and x ∈ X.
   {g : G} {x : X}
   -- Given φ.
@@ -216,7 +216,7 @@ instance subgroupAsGSet {G : Type*} [Group G] (H : Subgroup G) : GroupAction H G
       simp
   }
 
-instance subgroupAsGSet_conjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
+instance subgroupAsGSetConjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
   { act := fun h g => h * g * h⁻¹
     ga_mul := by
       intro g₁ g₂ g₃
@@ -297,13 +297,13 @@ def stabilizer (x : X) : Subgroup G := by
 
 
 /-- The stabilizer set is the carrier of a subgroup of `G`. -/
-theorem stabilizerSet_isSubgroup (x : X) :
+theorem stabilizer_set_is_subgroup (x : X) :
     ∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
   refine ⟨stabilizer (G := G) (X := X) x, rfl⟩
 
 
 -- /-- The stabilizer set is the carrier of a subgroup of `G`. -/
--- theorem stabilizerSet_isSubgroup' (x : X) :
+-- theorem stabilizer_set_is_subgroup' (x : X) :
 --     ∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
 --   use
 --     { carrier := stabilizerSet (G := G) (X := X) x
@@ -330,7 +330,7 @@ theorem stabilizerSet_isSubgroup (x : X) :
 --   rfl
 -- /-- The stabilizer `G_x` as a subgroup of `G` (defined via choice). -/
 -- noncomputable def stabilizer_via_choice (x : X) : Subgroup G :=
---   Classical.choose (stabilizerSet_isSubgroup' (G := G) (X := X) x)
+--   Classical.choose (stabilizer_set_is_subgroup' (G := G) (X := X) x)
 -- theorem stabilizer_carrier_via_choice (x : X) :
 --     (stabilizer_via_choice (G := G) (X := X) x : Set G) = stabilizerSet (G := G) (X := X) x :=
---   Classical.choose_spec (stabilizerSet_isSubgroup' (G := G) (X := X) x)
+--   Classical.choose_spec (stabilizer_set_is_subgroup' (G := G) (X := X) x)

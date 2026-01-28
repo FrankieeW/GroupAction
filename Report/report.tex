@@ -75,13 +75,10 @@
 % ASSIGNMENT CONTENT
 %----------------------------------------------------------------------------------------
 \section{Introduction}
-This report presents a Lean 4 formalisation of basic results about group actions.
-I define a minimal action class, construct the associated permutation representation,
-and show that stabilizers form subgroups. The Lean development follows the standard
-textbook proofs but makes every step explicit, so an algebraist unfamiliar with Lean
-can still map each line of code to a familiar argument.
+This report formalises the theory of group actions in Lean 4. I define a custom action
+class, construct the permutation representation, and prove that stabilizers form subgroups.
 
-\subsection{Main theorem}
+\subsection{Main result}
 \begin{quote}
 	\textbf{Theorem.} Let $X$ be a $G$-set. For each $g \in G$, the map
 	$\varphi_g : X \to X$ defined by $\varphi_g(x) = g \cdot x$ is a permutation of $X$.
@@ -89,11 +86,14 @@ can still map each line of code to a familiar argument.
 	homomorphism, and for all $g \in G$ and $x \in X$, $\Phi(g)(x) = g \cdot x$.
 \end{quote}
 
-\subsection{Reader's guide}
-This report is written for an external examiner who knows abstract algebra but not Lean.
-Each section contains (1) a short mathematical explanation in plain English and
-(2) a Lean excerpt mirroring the textbook proof. The code is intentionally explicit
-and avoids heavy automation so that the structure of the proof is visible.
+\subsection{Why formalise group actions?}
+Formalisation in Lean forces every step to be explicit: hidden assumptions become visible,
+informal ``clearly'' arguments must be justified, and type checking prevents mistakes.
+An external examiner familiar with group theory can read this report without prior Lean
+knowledge, as each section presents the mathematics first, then shows the corresponding
+Lean code. Lean's type system ensures that the permutation representation really is a
+group homomorphism and that stabilizers really are subgroups---claims that informal proofs
+sometimes take for granted.
 
 \section{Background and Design Choices}
 \subsection{Why a custom action class}
@@ -134,6 +134,122 @@ Throughout the file I work with a group $G$ acting on a type $X$:
 	-- Fix a group and an action instance.
 	variable {G : Type*} [Group G] {X : Type*} [GroupAction G X]
 \end{leancode}
+
+\section{Concrete Examples of Group Actions}
+This section presents six concrete instances of the \texttt{GroupAction} class,
+illustrating how the abstract definition applies to familiar mathematical structures.
+
+\subsection{Symmetric group acting on a set}
+Let $X$ be any type. The symmetric group $\mathrm{Sym}(X)$ acts on $X$ by evaluation:
+for $\sigma \in \mathrm{Sym}(X)$ and $x \in X$, define $\sigma \cdot x := \sigma(x)$.
+
+\begin{leancode}
+	instance permGroupAction {X : Type*} : GroupAction (Equiv.Perm X) X :=
+	{ act := fun g x => g x
+	ga_mul := by
+	intro g1 g2 x
+	rfl
+	ga_one := by
+	intro x
+	rfl }
+\end{leancode}
+
+The axiom proofs are immediate by reflexivity: composition of permutations and function
+evaluation commute definitionally in Lean.
+
+\subsection{Group acting on itself by left multiplication}
+Every group $G$ acts on itself by left multiplication: $g_1 \cdot g_2 := g_1 * g_2$.
+
+\begin{leancode}
+	instance groupAsGSet {G : Type*} [Group G] : GroupAction G G :=
+	{ act := fun g1 g2 => g1 * g2
+	ga_mul := by
+	intro g1 g2 g3
+	rw [mul_assoc]
+	ga_one := by
+	intro g
+	rw [one_mul] }
+\end{leancode}
+
+The \texttt{ga\_mul} axiom follows from associativity of group multiplication, and
+\texttt{ga\_one} from the identity axiom.
+
+\subsection{Subgroup acting on the group}
+A subgroup $H \leq G$ acts on $G$ by left multiplication. Elements of $H$ are coerced
+to elements of $G$ using \texttt{(h : G)}.
+
+\begin{leancode}
+	instance subgroupAsGSet {G : Type*} [Group G] (H : Subgroup G) : GroupAction H G :=
+	{ act := fun h g => (h : G) * g
+	ga_mul := by
+	intros
+	simp [mul_assoc]
+	ga_one := by
+	intros
+	simp }
+\end{leancode}
+
+The \texttt{simp} tactic handles the coercion and applies associativity and identity axioms.
+
+\subsection{Conjugation action of a subgroup on itself}
+A subgroup $H$ acts on itself by conjugation: $h_1 \cdot h_2 := h_1 h_2 h_1^{-1}$.
+
+\begin{leancode}
+	instance subgroupAsGSet_conjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
+	{ act := fun h g => h * g * h⁻¹
+	ga_mul := by
+	intro g₁ g₂ g₃
+	simp
+	rw [← mul_assoc g₁]
+	rw [mul_assoc g₁ g₂]
+	rw [← mul_assoc]
+	ga_one := by
+	intros
+	simp }
+\end{leancode}
+
+The \texttt{ga\_mul} proof rearranges terms using associativity to show
+$(g_1 g_2) \cdot g_3 = g_1 \cdot (g_2 \cdot g_3)$ under conjugation.
+
+\subsection{Scalar action on complex vector spaces}
+The multiplicative group $\mathbb{C}^\times$ of nonzero complex numbers acts on
+$\mathbb{C}^n$ by scalar multiplication.
+
+\begin{leancode}
+	instance vectorSpaceAsCStarSet (n : ℕ) : GroupAction (ℂˣ) (Fin n → ℂ) :=
+	{ act := fun r v => fun i => (r : ℂ) * v i
+	ga_mul := by
+	intros r1 r2 v
+	ext i
+	simp [mul_assoc]
+	ga_one := by
+	intro v
+	ext i
+	simp }
+\end{leancode}
+
+Here \texttt{ℂˣ} denotes the units of $\mathbb{C}$ (invertible elements), and
+\texttt{Fin n → ℂ} represents functions from $\{0, \ldots, n-1\}$ to $\mathbb{C}$
+(i.e., $n$-dimensional complex vectors). The \texttt{ext} tactic proves function equality
+pointwise.
+
+\subsection{Scalar action on real vector spaces}
+Similarly, $\mathbb{R}^\times$ acts on $\mathbb{R}^n$ by scalar multiplication.
+
+\begin{leancode}
+	instance vectorSpaceAsRStarSet (n : ℕ) : GroupAction (ℝˣ) (Fin n → ℝ) :=
+	{ act := fun r v => fun i => (r : ℝ) * v i
+	ga_mul := by
+	intros r1 r2 v
+	ext i
+	simp [mul_assoc]
+	ga_one := by
+	intro v
+	ext i
+	simp }
+\end{leancode}
+
+The structure is identical to the complex case, with $\mathbb{R}$ replacing $\mathbb{C}$.
 
 \section{Permutation Representation}
 The core construction is the map $\sigma_g : X \to X$ given by $\sigma_g(x) = g \cdot x$.
@@ -218,7 +334,7 @@ Define the representation and its basic properties:
 Finally, package the existence statement:
 \begin{leancode}
 	-- Existence of the permutation representation with the required properties.
-	theorem groupActionToPermRepresentation :
+	theorem group_action_to_perm_representation :
 	∃ (φ : G → Equiv.Perm X),
 	(∀ g x, φ g x = GroupAction.act g x) ∧
 	(∀ g₁ g₂, φ (g₁ * g₂) = φ g₁ * φ g₂) ∧
@@ -284,15 +400,37 @@ Package it as a subgroup by checking closure:
 Then show the set is the carrier of a subgroup:
 \begin{leancode}
 	/-- The stabilizer set is the carrier of a subgroup of `G`. -/
-	theorem stabilizerSet_isSubgroup (x : X) :
+	theorem stabilizer_set_is_subgroup (x : X) :
 	∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
 	refine ⟨stabilizer (G := G) (X := X) x, rfl⟩
 \end{leancode}
 
 \section{Main Theorem}
-The Lean theorem \texttt{groupActionToPermRepresentation} packages the permutation
+The Lean theorem \texttt{group\_action\_to\_perm\_representation} packages the permutation
 representation together with its key properties. The proof uses the lemmas from the
 previous section: \texttt{phi\_apply}, \texttt{phi\_mul}, and \texttt{phi\_one}.
+
+\section{What Lean Guarantees}
+Formalizing these constructions in Lean provides guarantees that informal proofs cannot match.
+When Lean accepts a definition or theorem, it has verified:
+\begin{itemize}
+	\item \textbf{Types are correct.} The function \texttt{phi : G → Equiv.Perm X} has the claimed type.
+	      Lean checks that \texttt{sigmaPerm g} is actually a permutation (a bijection), not just a function.
+	      If we mistakenly defined a non-bijective map, Lean would reject it.
+	\item \textbf{No hidden assumptions.} Every lemma explicitly lists its hypotheses. If a proof uses
+	      associativity, the code must invoke \texttt{mul\_assoc} or the \texttt{ga\_mul} axiom.
+	      There are no ``clearly'' or ``it follows that'' steps that skip justification.
+	\item \textbf{Axioms match definitions.} The \texttt{GroupAction} class requires \texttt{ga\_mul}
+	      and \texttt{ga\_one}. If we omitted \texttt{ga\_one}, the proof of \texttt{phi\_one} would fail
+	      because Lean would have no way to show $1 \cdot x = x$.
+	\item \textbf{Subgroup structure is verified.} When we package the stabilizer as a \texttt{Subgroup},
+	      Lean checks that we provided proofs of closure under multiplication, inverses, and identity.
+	      The type system prevents us from claiming ``the stabilizer is a subgroup'' without proving it.
+\end{itemize}
+
+These checks prevent common errors: mistaken claims about injectivity, forgotten hypotheses,
+and gaps in subgroup proofs. An external examiner can trust that the Lean code genuinely establishes
+the mathematical claims, not just that it compiles.
 
 \section{Reflection}
 Writing the proofs in Lean forced me to make every step explicit. In particular:
@@ -309,6 +447,32 @@ I estimate the formalisation took over fifteen hours, mostly due to understandin
 Lean's typeclass resolution and the mechanics of equivalences and permutations in
 mathlib. The final development is compact but captures the standard argument for the
 permutation representation and the stabilizer subgroup.
+
+\subsection{Specific challenges encountered}
+Several technical hurdles emerged during the formalization:
+\begin{itemize}
+	\item \textbf{Typeclass resolution:} Ensuring Lean could automatically find the \texttt{GroupAction}
+	      instance in complex contexts required careful use of explicit type annotations (e.g., \texttt{(G := G)}).
+	\item \textbf{Equivalence mechanics:} Constructing \texttt{sigmaPerm} as an \texttt{Equiv.Perm X}
+	      required providing both \texttt{left\_inv} and \texttt{right\_inv} proofs, which meant carefully
+	      applying the \texttt{ga\_mul} axiom in both directions.
+	\item \textbf{Coercions:} Working with subgroups required understanding how Lean coerces elements
+	      of type \texttt{H} (a subgroup) to type \texttt{G} (the ambient group) using \texttt{(h : G)}.
+	\item \textbf{Function extensionality:} Proving equality of permutations required \texttt{Equiv.ext},
+	      and equality of vector-valued functions required \texttt{ext i}, which were not immediately obvious.
+\end{itemize}
+
+\subsection{Potential extensions}
+This development could be extended in several directions:
+\begin{itemize}
+	\item \textbf{Orbit-stabilizer theorem:} Formalize the relationship $|G| = |\text{Orb}(x)| \cdot |G_x|$
+	      for finite groups, which requires defining orbits and proving Lagrange's theorem.
+	\item \textbf{Burnside's lemma:} Count orbits using the formula involving fixed points.
+	\item \textbf{Actions on cosets:} Show that a group acts on the left cosets of a subgroup,
+	      yielding the standard permutation representation.
+	\item \textbf{Cayley's theorem:} Specialize the permutation representation to the case where
+	      $G$ acts on itself, proving every group embeds in a symmetric group.
+\end{itemize}
 
 \section{AI Assistance Statement}
 I used AI assistance to help draft Lean proofs and improve code readability. All
