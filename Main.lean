@@ -28,7 +28,9 @@ Addison–Wesley, 2003, Section 16 (Group Actions).
 
 
 /-! ## Definitions: group actions -/
-/-- Defines a group action of a monoid `G` on a type `X`. The action is given by `act : G → X → X`, satisfying the axioms `ga_mul` and `ga_one`. -/
+/-- Defines a group action of a monoid `G` on a type `X`.
+The action is given by `act : G → X → X`,
+satisfying the axioms `ga_mul` and `ga_one`. -/
 class GroupAction (G : Type*) [Monoid G] (X : Type*) where
   act : G → X → X
   ga_mul : ∀ g₁ g₂ x, act (g₁ * g₂) x = act g₁ (act g₂ x)
