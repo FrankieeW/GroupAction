@@ -117,13 +117,13 @@ throughout the file.
 \subsection{Lean code}
 I first declare a minimal class for group actions:
 \begin{leancode}
-	class GroupAction (G : Type*) [Monoid G] (X : Type*) where
-	-- The action map: apply g to x.
-	act : G → X → X
-	-- Compatibility with multiplication in G.
-	ga_mul : ∀ g₁ g₂ x, act (g₁ * g₂) x = act g₁ (act g₂ x)
-	-- The identity element acts as the identity function.
-	ga_one : ∀ x, act 1 x = x
+class GroupAction (G : Type*) [Monoid G] (X : Type*) where
+  -- The action map: apply g to x.
+  act : G → X → X
+  -- Compatibility with multiplication in G.
+  ga_mul : ∀ g₁ g₂ x, act (g₁ * g₂) x = act g₁ (act g₂ x)
+  -- The identity element acts as the identity function.
+  ga_one : ∀ x, act 1 x = x
 \end{leancode}
 Note that I use \texttt{Monoid} here because the definition of a group action does not
 require inverses. Later results about permutation representations and stabilizers
@@ -131,8 +131,8 @@ require a \texttt{Group}, so the subsequent sections assume \texttt{[Group G]}.
 
 Throughout the file I work with a group $G$ acting on a type $X$:
 \begin{leancode}
-	-- Fix a group and an action instance.
-	variable {G : Type*} [Group G] {X : Type*} [GroupAction G X]
+  -- Fix a group and an action instance.
+  variable {G : Type*} [Group G] {X : Type*} [GroupAction G X]
 \end{leancode}
 
 \section{Concrete Examples of Group Actions}
@@ -144,14 +144,14 @@ Let $X$ be any type. The symmetric group $\mathrm{Sym}(X)$ acts on $X$ by evalua
 for $\sigma \in \mathrm{Sym}(X)$ and $x \in X$, define $\sigma \cdot x := \sigma(x)$.
 
 \begin{leancode}
-	instance permGroupAction {X : Type*} : GroupAction (Equiv.Perm X) X :=
-	{ act := fun g x => g x
-	ga_mul := by
-	intro g1 g2 x
-	rfl
-	ga_one := by
-	intro x
-	rfl }
+  instance permGroupAction {X : Type*} : GroupAction (Equiv.Perm X) X :=
+  { act := fun g x => g x
+  ga_mul := by
+  intro g1 g2 x
+  rfl
+  ga_one := by
+  intro x
+  rfl }
 \end{leancode}
 
 The axiom proofs are immediate by reflexivity: composition of permutations and function
@@ -161,14 +161,14 @@ evaluation commute definitionally in Lean.
 Every group $G$ acts on itself by left multiplication: $g_1 \cdot g_2 := g_1 * g_2$.
 
 \begin{leancode}
-	instance groupAsGSet {G : Type*} [Group G] : GroupAction G G :=
-	{ act := fun g1 g2 => g1 * g2
-	ga_mul := by
-	intro g1 g2 g3
-	rw [mul_assoc]
-	ga_one := by
-	intro g
-	rw [one_mul] }
+  instance groupAsGSet {G : Type*} [Group G] : GroupAction G G :=
+  { act := fun g1 g2 => g1 * g2
+  ga_mul := by
+  intro g1 g2 g3
+  rw [mul_assoc]
+  ga_one := by
+  intro g
+  rw [one_mul] }
 \end{leancode}
 
 The \texttt{ga\_mul} axiom follows from associativity of group multiplication, and
@@ -179,14 +179,14 @@ A subgroup $H \leq G$ acts on $G$ by left multiplication. Elements of $H$ are co
 to elements of $G$ using \texttt{(h : G)}.
 
 \begin{leancode}
-	instance subgroupAsGSet {G : Type*} [Group G] (H : Subgroup G) : GroupAction H G :=
-	{ act := fun h g => (h : G) * g
-	ga_mul := by
-	intros
-	simp [mul_assoc]
-	ga_one := by
-	intros
-	simp }
+  instance subgroupAsGSet {G : Type*} [Group G] (H : Subgroup G) : GroupAction H G :=
+  { act := fun h g => (h : G) * g
+  ga_mul := by
+  intros
+  simp [mul_assoc]
+  ga_one := by
+  intros
+  simp }
 \end{leancode}
 
 The \texttt{simp} tactic handles the coercion and applies associativity and identity axioms.
@@ -195,27 +195,27 @@ The \texttt{simp} tactic handles the coercion and applies associativity and iden
 A subgroup $H$ acts on itself by conjugation: $h_1 \cdot h_2 := h_1 h_2 h_1^{-1}$.
 
 \begin{leancode}
-	instance subgroupAsGSet_conjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
-	{ act := fun h g => h * g * h⁻¹
-	ga_mul := by
-	  intro g₁ g₂ g₃
-	  -- simp [mul_assoc]
-    simp
-    -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃ * g₂⁻¹) * g₁⁻¹
-    rw [ ← mul_assoc g₁]
-    -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
-    rw [mul_assoc g₁ g₂]
-    -- goal state:  g₁ * (g₂ * g₃) * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
-    rw [← mul_assoc]
-	ga_one := by
-	intros
-	simp }
+  instance subgroupAsGSet_conjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
+  { act := fun h g => h * g * h⁻¹
+  ga_mul := by
+  intro g₁ g₂ g₃
+  -- simp [mul_assoc]
+  simp
+  -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃ * g₂⁻¹) * g₁⁻¹
+  rw [ ← mul_assoc g₁]
+  -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
+  rw [mul_assoc g₁ g₂]
+  -- goal state:  g₁ * (g₂ * g₃) * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
+  rw [← mul_assoc]
+  ga_one := by
+  intros
+  simp }
 \end{leancode}
 % mul_assoc.{u_1} {G : Type u_1} [Semigroup G] (a b c : G) : a * b * c = a * (b * c)
 The \texttt{mul\_assoc} lemma is from mathlib and states associativity of multiplication:
 \begin{leancode}
   mul_assoc.{u_1} {G : Type u_1} [Semigroup G] (a b c : G) :
-                                      a * b * c = a * (b * c)
+  a * b * c = a * (b * c)
 \end{leancode}
 The \texttt{ga\_mul} proof can easily be done by \texttt{simp [mul\_assoc]}, but I expanded it to show the steps explicitly by using \texttt{rw}. \\
 
@@ -228,16 +228,16 @@ The multiplicative group $\mathbb{C}^\times$ of nonzero complex numbers acts on
 $\mathbb{C}^n$ by scalar multiplication.
 
 \begin{leancode}
-	instance vectorSpaceAsCStarSet (n : ℕ) : GroupAction (ℂˣ) (Fin n → ℂ) :=
-	{ act := fun r v => fun i => (r : ℂ) * v i
-	ga_mul := by
-	intros r1 r2 v
-	ext i
-	simp [mul_assoc]
-	ga_one := by
-	intro v
-	ext i
-	simp }
+  instance vectorSpaceAsCStarSet (n : ℕ) : GroupAction (ℂˣ) (Fin n → ℂ) :=
+  { act := fun r v => fun i => (r : ℂ) * v i
+  ga_mul := by
+  intros r1 r2 v
+  ext i
+  simp [mul_assoc]
+  ga_one := by
+  intro v
+  ext i
+  simp }
 \end{leancode}
 
 Here \texttt{ℂˣ} denotes the units of $\mathbb{C}$ (invertible elements), and
@@ -249,16 +249,16 @@ pointwise.
 Similarly, $\mathbb{R}^\times$ acts on $\mathbb{R}^n$ by scalar multiplication.
 
 \begin{leancode}
-	instance vectorSpaceAsRStarSet (n : ℕ) : GroupAction (ℝˣ) (Fin n → ℝ) :=
-	{ act := fun r v => fun i => (r : ℝ) * v i
-	ga_mul := by
-	intros r1 r2 v
-	ext i
-	simp [mul_assoc]
-	ga_one := by
-	intro v
-	ext i
-	simp }
+  instance vectorSpaceAsRStarSet (n : ℕ) : GroupAction (ℝˣ) (Fin n → ℝ) :=
+  { act := fun r v => fun i => (r : ℝ) * v i
+  ga_mul := by
+  intros r1 r2 v
+  ext i
+  simp [mul_assoc]
+  ga_one := by
+  intro v
+  ext i
+  simp }
 \end{leancode}
 
 The structure is identical to the complex case, with $\mathbb{R}$ replacing $\mathbb{C}$.
@@ -280,78 +280,78 @@ $\phi(g) = \sigma_g$, and multiplicativity follows from the action axiom:
 \subsection{Lean code}
 First, define the underlying action map:
 \begin{leancode}
-	/-- The action map `sigma g : X → X`
-	given by `x ↦ g • x`. -/
-	def sigma (g : G) : X → X :=
-	-- We use the action directly.
-	fun x => GroupAction.act g x
+  /-- The action map `sigma g : X → X`
+  given by `x ↦ g • x`. -/
+  def sigma (g : G) : X → X :=
+  -- We use the action directly.
+  fun x => GroupAction.act g x
 \end{leancode}
 
 Then package it as a permutation using the inverse action:
 \begin{leancode}
-	/-- The permutation of `X` induced by `g`,
-	with inverse given by `g⁻¹`. -/
-	def sigmaPerm (g : G) : Equiv.Perm X := by
-	refine
-		{ toFun := sigma g
-			invFun := sigma g⁻¹
-			left_inv := ?_
-			right_inv := ?_ }
-	· intro x
-	calc
-	-- Apply the action axiom, then cancel g⁻¹ * g.
-	GroupAction.act g⁻¹ (GroupAction.act g x) =
-	GroupAction.act (g⁻¹ * g) x := by
-	simpa using (GroupAction.ga_mul g⁻¹ g x).symm
-	_ = GroupAction.act (1 : G) x := by simp
-	_ = x := GroupAction.ga_one x
-	· intro x
-	calc
-	-- The symmetric calculation for g * g⁻¹.
-	GroupAction.act g (GroupAction.act g⁻¹ x) =
-	GroupAction.act (g * g⁻¹) x := by
-	simpa using (GroupAction.ga_mul g g⁻¹ x).symm
-	_ = GroupAction.act (1 : G) x := by simp
-	_ = x := GroupAction.ga_one x
+  /-- The permutation of `X` induced by `g`,
+  with inverse given by `g⁻¹`. -/
+  def sigmaPerm (g : G) : Equiv.Perm X := by
+  refine
+    { toFun := sigma g
+      invFun := sigma g⁻¹
+      left_inv := ?_
+      right_inv := ?_ }
+  · intro x
+  calc
+  -- Apply the action axiom, then cancel g⁻¹ * g.
+  GroupAction.act g⁻¹ (GroupAction.act g x) =
+  GroupAction.act (g⁻¹ * g) x := by
+  simpa using (GroupAction.ga_mul g⁻¹ g x).symm
+  _ = GroupAction.act (1 : G) x := by simp
+  _ = x := GroupAction.ga_one x
+  · intro x
+  calc
+  -- The symmetric calculation for g * g⁻¹.
+  GroupAction.act g (GroupAction.act g⁻¹ x) =
+  GroupAction.act (g * g⁻¹) x := by
+  simpa using (GroupAction.ga_mul g g⁻¹ x).symm
+  _ = GroupAction.act (1 : G) x := by simp
+  _ = x := GroupAction.ga_one x
 \end{leancode}
 
 Define the representation and its basic properties:
 \begin{leancode}
-	/-- The permutation representation `phi : G → Equiv.Perm X`
-	induced by the action. -/
-	def phi (g : G) : Equiv.Perm X :=
-	sigmaPerm g
+  /-- The permutation representation `phi : G → Equiv.Perm X`
+  induced by the action. -/
+  def phi (g : G) : Equiv.Perm X :=
+  sigmaPerm g
 
-	-- `phi` agrees with the action on elements.
-	lemma phi_apply (g : G) (x : X) : phi g x = GroupAction.act g x := rfl
+  -- `phi` agrees with the action on elements.
+  lemma phi_apply (g : G) (x : X) : phi g x = GroupAction.act g x := rfl
 
-	lemma phi_mul (g₁ g₂ : G) : phi (g₁ * g₂) = phi g₁ * phi g₂ := by
-	-- Reduce equality of permutations to pointwise equality.
-	apply Equiv.ext
-	intro x
-	calc
-	phi (g₁ * g₂) x = GroupAction.act (g₁ * g₂) x := rfl
-	_ = GroupAction.act g₁ (GroupAction.act g₂ x) := GroupAction.ga_mul g₁ g₂ x
-	_ = (phi g₁ * phi g₂) x := rfl
+  lemma phi_mul (g₁ g₂ : G) : phi (g₁ * g₂) = phi g₁ * phi g₂ := by
+  -- Reduce equality of permutations to pointwise equality.
+  apply Equiv.ext
+  intro x
+  calc
+  phi (g₁ * g₂) x = GroupAction.act (g₁ * g₂) x := rfl
+  _ = GroupAction.act g₁ (GroupAction.act g₂ x) := GroupAction.ga_mul g₁ g₂ x
+  _ = (phi g₁ * phi g₂) x := rfl
 
-	lemma phi_one : phi (1 : G) = (1 : Equiv.Perm X) := by
-	apply Equiv.ext
-	intro x
-	calc
-	phi (1 : G) x = GroupAction.act (1 : G) x := rfl
-	_ = x := GroupAction.ga_one x
-	_ = (1 : Equiv.Perm X) x := by simp [Equiv.Perm.one_apply]
+  lemma phi_one : phi (1 : G) = (1 : Equiv.Perm X) := by
+  apply Equiv.ext
+  intro x
+  calc
+  phi (1 : G) x = GroupAction.act (1 : G) x := rfl
+  _ = x := GroupAction.ga_one x
+  _ = (1 : Equiv.Perm X) x := by simp [Equiv.Perm.one_apply]
 \end{leancode}
 
 Finally, package the existence statement:
 \begin{leancode}
-	-- Existence of the permutation representation with the required properties.
-	theorem group_action_to_perm_representation :
-	∃ (φ : G → Equiv.Perm X),
-	(∀ g x, φ g x = GroupAction.act g x) ∧
-	(∀ g₁ g₂, φ (g₁ * g₂) = φ g₁ * φ g₂) ∧
-	(φ 1 = 1) := by
-	exact ⟨phi, ⟨phi_apply, ⟨phi_mul, phi_one⟩⟩⟩
+  -- Existence of the permutation representation with the required properties.
+  theorem group_action_to_perm_representation :
+  ∃ (φ : G → Equiv.Perm X),
+  (∀ g x, φ g x = GroupAction.act g x) ∧
+  (∀ g₁ g₂, φ (g₁ * g₂) = φ g₁ * φ g₂) ∧
+  (φ 1 = 1) := by
+  exact ⟨phi, ⟨phi_apply, ⟨phi_mul, phi_one⟩⟩⟩
 \end{leancode}
 
 \section{Stabilizers}
@@ -372,58 +372,58 @@ so $g^{-1} \in G_x$.
 \subsection{Lean code}
 Start from the set definition:
 \begin{leancode}
-	/-- The stabilizer set
-	`G_x = { g ∈ G | g • x = x }`. -/
-	def stabilizerSet (x : X) : Set G :=
-	-- Membership means g fixes x.
-		{ g : G | GroupAction.act g x = x }
+  /-- The stabilizer set
+  `G_x = { g ∈ G | g • x = x }`. -/
+  def stabilizerSet (x : X) : Set G :=
+  -- Membership means g fixes x.
+    { g : G | GroupAction.act g x = x }
 \end{leancode}
 
 Package it as a subgroup by checking closure:
 \begin{leancode}
-	/-- The stabilizer `G_x` as a subgroup of `G`. -/
-	def stabilizer (x : X) : Subgroup G := by
-	exact
-		{ carrier := stabilizerSet (G := G) (X := X) x
+  /-- The stabilizer `G_x` as a subgroup of `G`. -/
+  def stabilizer (x : X) : Subgroup G := by
+  exact
+    { carrier := stabilizerSet (G := G) (X := X) x
       -- A submonoid(subgroup) contains 1.
-			one_mem' := by
-			  -- The identity fixes every x.
-			  simp [stabilizerSet, GroupAction.ga_one x]
-			mul_mem' := by
-			  intro g₁ g₂ hg₁ hg₂
-			  calc
-			  -- Closure under multiplication uses the action axiom.
-			    GroupAction.act (g₁ * g₂) x = GroupAction.act g₁ (GroupAction.act g₂ x) := by
-			    simpa using (GroupAction.ga_mul g₁ g₂ x)
-			    _ = GroupAction.act g₁ x := by
-			      rw [hg₂]
-			    _ = x := hg₁
+      one_mem' := by
+      -- The identity fixes every x.
+      simp [stabilizerSet, GroupAction.ga_one x]
+      mul_mem' := by
+      intro g₁ g₂ hg₁ hg₂
+      calc
+      -- Closure under multiplication uses the action axiom.
+      GroupAction.act (g₁ * g₂) x = GroupAction.act g₁ (GroupAction.act g₂ x) := by
+      simpa using (GroupAction.ga_mul g₁ g₂ x)
+      _ = GroupAction.act g₁ x := by
+      rw [hg₂]
+      _ = x := hg₁
       -- G is closed under inverses.
-			inv_mem' := by
-			  intro g hg
-			  calc
-			  -- If g fixes x then g⁻¹ fixes x.
-			  GroupAction.act g⁻¹ x = GroupAction.act g⁻¹ (GroupAction.act g x) := by
-			    rw [hg]
-			  _ = GroupAction.act (g⁻¹ * g) x := by
-			    simpa using (GroupAction.ga_mul g⁻¹ g x).symm
-			  _ = GroupAction.act (1 : G) x := by simp
-			  _ = x := GroupAction.ga_one x }
+      inv_mem' := by
+      intro g hg
+      calc
+      -- If g fixes x then g⁻¹ fixes x.
+      GroupAction.act g⁻¹ x = GroupAction.act g⁻¹ (GroupAction.act g x) := by
+      rw [hg]
+      _ = GroupAction.act (g⁻¹ * g) x := by
+      simpa using (GroupAction.ga_mul g⁻¹ g x).symm
+      _ = GroupAction.act (1 : G) x := by simp
+      _ = x := GroupAction.ga_one x }
 \end{leancode}
 
 Then show the set is the carrier of a subgroup:
 \begin{leancode}
-	/-- The stabilizer set is the carrier of a subgroup of `G`. -/
-	theorem stabilizer_set_is_subgroup (x : X) :
-	∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
-	refine ⟨stabilizer (G := G) (X := X) x, rfl⟩
+  /-- The stabilizer set is the carrier of a subgroup of `G`. -/
+  theorem stabilizer_set_is_subgroup (x : X) :
+  ∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
+  refine ⟨stabilizer (G := G) (X := X) x, rfl⟩
 \end{leancode}
 
 \iffalse
-\section{Main Theorem}
-The Lean theorem \texttt{group\_action\_to\_perm\_representation} packages the permutation
-representation together with its key properties. The proof uses the lemmas from the
-previous section: \texttt{phi\_apply}, \texttt{phi\_mul}, and \texttt{phi\_one}.
+	\section{Main Theorem}
+	The Lean theorem \texttt{group\_action\_to\_perm\_representation} packages the permutation
+	representation together with its key properties. The proof uses the lemmas from the
+	previous section: \texttt{phi\_apply}, \texttt{phi\_mul}, and \texttt{phi\_one}.
 \fi
 
 \section{What Lean Guarantees}
