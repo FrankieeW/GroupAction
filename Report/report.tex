@@ -314,7 +314,13 @@ Then package it as a permutation using the inverse action:
   _ = GroupAction.act (1 : G) x := by simp
   _ = x := GroupAction.ga_one x
 \end{leancode}
-
+Using \texttt{\#check} on \texttt{sigmaPerm} confirms that it has type
+\begin{leancode}
+	#check sigmaPerm
+	sigmaPerm.{u_1, u_2} {G : Type u_1} [Group G] {X : Type u_2} [GroupAction G X] (g : G) : Equiv.Perm X
+\end{leancode}
+\texttt{sigmaPerm} takes any group element $g \in G$ and returns a permutation of $X$ (i.e., an element of $\mathrm{Equiv.Perm}\ X$).
+This type signature confirms that for any group $G$ acting on any type $X$, the map $g \mapsto \sigma_g$ is a well-defined function from $G$ to the symmetric group on $X$.
 Define the representation and its basic properties:
 \begin{leancode}
   /-- The permutation representation `phi : G → Equiv.Perm X`

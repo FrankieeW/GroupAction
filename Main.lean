@@ -41,14 +41,7 @@ variable {G : Type*} [Group G] {X : Type*} [GroupAction G X]
 
 
 -- /-!
--- ## Example (commented out)
--- A sanity check of the action axiom.
--- -/
--- example (g1 g2 : G) (x : X) :
---   GroupAction.act (g1 * g2) x = GroupAction.act g1 (GroupAction.act g2 x) :=
---   GroupAction.ga_mul g1 g2 x
--- -- The symmetric group on `X` is `Equiv.Perm X`.
--- -- Its elements act on `X` by function application.
+-- ## Example
 
 /-- The symmetric group `Equiv.Perm X` acts on `X` by evaluation. -/
 instance permGroupAction (X : Type*) : GroupAction (Equiv.Perm X) X :=
@@ -60,10 +53,6 @@ instance permGroupAction (X : Type*) : GroupAction (Equiv.Perm X) X :=
       intro x
       rfl }
 
---## some example of Group Action
--- Every group G i s itself a G-set, where the action on g2 ∈  G by g 1 ∈  G is given by lett
--- multiplication. That is, *(g1, g2) = g1g2. I f H is a subgroup of G , we can also regard G
--- as an H-set, where * (h, g) = hg.
 
 instance groupAsGSet (G : Type*) [Group G] : GroupAction G G :=
   { act := fun g1 g2 => g1 * g2
