@@ -198,19 +198,31 @@ A subgroup $H$ acts on itself by conjugation: $h_1 \cdot h_2 := h_1 h_2 h_1^{-1}
 	instance subgroupAsGSet_conjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
 	{ act := fun h g => h * g * h⁻¹
 	ga_mul := by
-	intro g₁ g₂ g₃
-	simp
-	rw [← mul_assoc g₁]
-	rw [mul_assoc g₁ g₂]
-	rw [← mul_assoc]
+	  intro g₁ g₂ g₃
+	  -- simp [mul_assoc]
+    simp
+    -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃ * g₂⁻¹) * g₁⁻¹
+    rw [ ← mul_assoc g₁]
+    -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
+    rw [mul_assoc g₁ g₂]
+    -- goal state:  g₁ * (g₂ * g₃) * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
+    rw [← mul_assoc]
 	ga_one := by
 	intros
 	simp }
 \end{leancode}
+% mul_assoc.{u_1} {G : Type u_1} [Semigroup G] (a b c : G) : a * b * c = a * (b * c)
+The \texttt{mul\_assoc} lemma is from mathlib and states associativity of multiplication:
+\begin{leancode}
+  mul_assoc.{u_1} {G : Type u_1} [Semigroup G] (a b c : G) :
+                                      a * b * c = a * (b * c)
+\end{leancode}
+The \texttt{ga\_mul} proof can easily be done by \texttt{simp [mul\_assoc]}, but I expanded it to show the steps explicitly by using \texttt{rw}. \\
 
-The \texttt{ga\_mul} proof rearranges terms using associativity to show
-$(g_1 g_2) \cdot g_3 = g_1 \cdot (g_2 \cdot g_3)$ under conjugation.
 
+For example the \texttt{rw [ ← mul\_assoc g₁]} will aotumatically find the passible situation looks like \texttt{g₁* (b * c)}, because we only give one argument \texttt{g₁} to \texttt{ ← mul\_assoc}.
+% g₁ * (g₂ * g₃ * g₂⁻¹)-> g₁ * (g₂ * g₃) * g₂⁻¹
+In detail, it will rewrite the left hand side \texttt{g₁ * (g₂ * g₃ * g₂⁻¹)} to \texttt{g₁ * (g₂ * g₃) * g₂⁻¹} according to the right to left direction of the lemma \texttt{mul\_assoc}.
 \subsection{Scalar action on complex vector spaces}
 The multiplicative group $\mathbb{C}^\times$ of nonzero complex numbers acts on
 $\mathbb{C}^n$ by scalar multiplication.
@@ -373,28 +385,30 @@ Package it as a subgroup by checking closure:
 	def stabilizer (x : X) : Subgroup G := by
 	exact
 		{ carrier := stabilizerSet (G := G) (X := X) x
+      -- A submonoid(subgroup) contains 1.
 			one_mem' := by
-			-- The identity fixes every x.
-			simp [stabilizerSet, GroupAction.ga_one x]
+			  -- The identity fixes every x.
+			  simp [stabilizerSet, GroupAction.ga_one x]
 			mul_mem' := by
-			intro g₁ g₂ hg₁ hg₂
-			calc
-			-- Closure under multiplication uses the action axiom.
-			GroupAction.act (g₁ * g₂) x = GroupAction.act g₁ (GroupAction.act g₂ x) := by
-			simpa using (GroupAction.ga_mul g₁ g₂ x)
-			_ = GroupAction.act g₁ x := by
-			rw [hg₂]
-			_ = x := hg₁
+			  intro g₁ g₂ hg₁ hg₂
+			  calc
+			  -- Closure under multiplication uses the action axiom.
+			    GroupAction.act (g₁ * g₂) x = GroupAction.act g₁ (GroupAction.act g₂ x) := by
+			    simpa using (GroupAction.ga_mul g₁ g₂ x)
+			    _ = GroupAction.act g₁ x := by
+			      rw [hg₂]
+			    _ = x := hg₁
+      -- G is closed under inverses.
 			inv_mem' := by
-			intro g hg
-			calc
-			-- If g fixes x then g⁻¹ fixes x.
-			GroupAction.act g⁻¹ x = GroupAction.act g⁻¹ (GroupAction.act g x) := by
-			rw [hg]
-			_ = GroupAction.act (g⁻¹ * g) x := by
-			simpa using (GroupAction.ga_mul g⁻¹ g x).symm
-			_ = GroupAction.act (1 : G) x := by simp
-			_ = x := GroupAction.ga_one x }
+			  intro g hg
+			  calc
+			  -- If g fixes x then g⁻¹ fixes x.
+			  GroupAction.act g⁻¹ x = GroupAction.act g⁻¹ (GroupAction.act g x) := by
+			    rw [hg]
+			  _ = GroupAction.act (g⁻¹ * g) x := by
+			    simpa using (GroupAction.ga_mul g⁻¹ g x).symm
+			  _ = GroupAction.act (1 : G) x := by simp
+			  _ = x := GroupAction.ga_one x }
 \end{leancode}
 
 Then show the set is the carrier of a subgroup:
@@ -405,10 +419,12 @@ Then show the set is the carrier of a subgroup:
 	refine ⟨stabilizer (G := G) (X := X) x, rfl⟩
 \end{leancode}
 
+\iffalse
 \section{Main Theorem}
 The Lean theorem \texttt{group\_action\_to\_perm\_representation} packages the permutation
 representation together with its key properties. The proof uses the lemmas from the
 previous section: \texttt{phi\_apply}, \texttt{phi\_mul}, and \texttt{phi\_one}.
+\fi
 
 \section{What Lean Guarantees}
 Formalizing these constructions in Lean provides guarantees that informal proofs cannot match.

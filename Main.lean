@@ -60,6 +60,74 @@ instance permGroupAction (X : Type*) : GroupAction (Equiv.Perm X) X :=
       intro x
       rfl }
 
+--## some example of Group Action
+-- Every group G i s itself a G-set, where the action on g2 ∈  G by g 1 ∈  G is given by lett
+-- multiplication. That is, *(g1, g2) = g1g2. I f H is a subgroup of G , we can also regard G
+-- as an H-set, where * (h, g) = hg.
+
+instance groupAsGSet (G : Type*) [Group G] : GroupAction G G :=
+  { act := fun g1 g2 => g1 * g2
+    ga_mul := by
+      intro g1 g2 g3
+      rw [mul_assoc]
+    ga_one := by
+      intro g
+      rw [one_mul] }
+
+
+instance subgroupAsGSet {G : Type*} [Group G] (H : Subgroup G) : GroupAction H G :=
+  { act := fun h g => (h : G) * g
+    ga_mul := by
+      intros
+      -- simp
+      -- rw [mul_assoc]
+      simp [mul_assoc]
+    ga_one := by
+      intros
+      simp
+  }
+
+instance subgroupAsGSetConjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
+  { act := fun h g => h * g * h⁻¹
+    ga_mul := by
+      intro g₁ g₂ g₃
+      -- simp [mul_assoc]
+      simp
+      -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃ * g₂⁻¹) * g₁⁻¹
+      rw [ ← mul_assoc g₁]
+      -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
+      rw [mul_assoc g₁ g₂]
+      -- goal state:  g₁ * (g₂ * g₃) * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
+      rw [← mul_assoc]
+    ga_one := by
+      intros
+      simp
+  }
+instance vectorSpaceAsCStarSet (n : ℕ) :
+    GroupAction (ℂˣ) (Fin n → ℂ) :=
+  { act := fun r v => fun i => (r : ℂ) * v i
+    ga_mul := by
+      intros r1 r2 v
+      ext i
+      simp [mul_assoc]
+    ga_one := by
+      intro v
+      ext i
+      simp
+  }
+instance vectorSpaceAsRStarSet (n : ℕ) :
+    GroupAction (ℝˣ) (Fin n → ℝ) :=
+  -- using vectorSpaceAsCStarSet
+  { act := fun r v => fun i => (r : ℝ) * v i
+    ga_mul := by
+      intros r1 r2 v
+      ext i
+      simp [mul_assoc]
+    ga_one := by
+      intro v
+      ext i
+      simp
+  }
 
 
 /-!
@@ -90,14 +158,15 @@ Moreover, for all `g ∈ G` and `x ∈ X`, we have `φ(g)(x) = g • x`.
 /-- Defines the action map `σ_g : X → X` by `x ↦ g • x`. -/
 def sigma (g : G) : X → X :=
   fun x => GroupAction.act g x
-
+#check sigma
 /-- Defines the permutation of `X` induced by `g`.
     The inverse is given by the action of `g⁻¹`. -/
 def sigmaPerm (g : G) : Equiv.Perm X :=
   { toFun := sigma g
     invFun := sigma g⁻¹
     left_inv := by
-      intro x
+
+      intro x --  ⊢ sigma g⁻¹ (sigma g x) = x
       calc
         -- Step 1: combine `g⁻¹` and `g` using the action axiom.
         GroupAction.act g⁻¹ (GroupAction.act g x) =
@@ -124,7 +193,7 @@ def sigmaPerm (g : G) : Equiv.Perm X :=
           simp
         -- Step 3: the identity acts as the identity on `X`.
         _ = x := GroupAction.ga_one x }
-
+#check sigmaPerm
 /-- Defines the permutation representation `phi : G → Equiv.Perm X`.
     This sends `g` to the permutation `σ_g`. -/
 def phi (g : G) : Equiv.Perm X :=
@@ -191,71 +260,7 @@ theorem group_action_to_perm_representation_apply
   hφ g x
 
 
---  some example
--- Every group G i s itself a G-set, where the action on g2 ∈  G by g 1 ∈  G is given by lett
--- multiplication. That is, *(g1, g2) = g1g2. I f H is a subgroup of G , we can also regard G
--- as an H-set, where * (h, g) = hg.
 
-instance groupAsGSet (G : Type*) [Group G] : GroupAction G G :=
-  { act := fun g1 g2 => g1 * g2
-    ga_mul := by
-      intro g1 g2 g3
-      rw [mul_assoc]
-    ga_one := by
-      intro g
-      rw [one_mul] }
-
-
-instance subgroupAsGSet {G : Type*} [Group G] (H : Subgroup G) : GroupAction H G :=
-  { act := fun h g => (h : G) * g
-    ga_mul := by
-      intros
-      -- simp
-      -- rw [mul_assoc]
-      simp [mul_assoc]
-    ga_one := by
-      intros
-      simp
-  }
-
-instance subgroupAsGSetConjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
-  { act := fun h g => h * g * h⁻¹
-    ga_mul := by
-      intro g₁ g₂ g₃
-      -- simp [mul_assoc]
-      simp
-      rw [ ← mul_assoc g₁]
-      rw [mul_assoc g₁ g₂]
-      rw [← mul_assoc]
-    ga_one := by
-      intros
-      simp
-  }
-instance vectorSpaceAsCStarSet (n : ℕ) :
-    GroupAction (ℂˣ) (Fin n → ℂ) :=
-  { act := fun r v => fun i => (r : ℂ) * v i
-    ga_mul := by
-      intros r1 r2 v
-      ext i
-      simp [mul_assoc]
-    ga_one := by
-      intro v
-      ext i
-      simp
-  }
-instance vectorSpaceAsRStarSet (n : ℕ) :
-    GroupAction (ℝˣ) (Fin n → ℝ) :=
-  -- using vectorSpaceAsCStarSet
-  { act := fun r v => fun i => (r : ℝ) * v i
-    ga_mul := by
-      intros r1 r2 v
-      ext i
-      simp [mul_assoc]
-    ga_one := by
-      intro v
-      ext i
-      simp
-  }
 
 /-!
 # Stabilizer (isotropy subgroup)
@@ -274,9 +279,11 @@ def stabilizerSet (x : X) : Set G :=
 def stabilizer (x : X) : Subgroup G := by
   exact
     { carrier := stabilizerSet (G := G) (X := X) x
+      -- A submonoid(subgroup) contains 1.
       one_mem' := by
         -- The identity fixes every x.
         simp [stabilizerSet, GroupAction.ga_one x]
+      -- The product of two elements of a subsemigroup belongs to the subsemigroup.
       mul_mem' := by
         intro g₁ g₂ hg₁ hg₂
         calc
@@ -286,6 +293,7 @@ def stabilizer (x : X) : Subgroup G := by
           _ = GroupAction.act g₁ x := by
             rw [hg₂]
           _ = x := hg₁
+      -- G is closed under inverses.
       inv_mem' := by
         intro g hg
         calc
