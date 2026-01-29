@@ -7,6 +7,7 @@ Copyright (c) 2026 Frankie Feng-Cheng WANG. All rights reserved.
 Repository: https://github.com/FrankieeW/
 -/
 import GroupAction.Defs
+import Mathlib.GroupTheory.Perm.Basic
 
 /-!
 ## Theorem: permutation representation

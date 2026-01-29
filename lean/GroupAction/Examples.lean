@@ -162,3 +162,25 @@ instance d4CenterAction : GroupAction D4 PUnit :=
     ga_one := by
       intros
       rfl }
+
+/-! ## Example: Symmetric group S₃ acting on {1,2,3} -/
+/-!
+The symmetric group on 3 elements acts transitively on `Fin 3`.
+This is the standard example of a transitive group action.
+-/
+abbrev S3 := Equiv.Perm (Fin 3)
+
+instance s3ActionFin3 : GroupAction S3 (Fin 3) :=
+  { act := fun g x => g x
+    ga_mul := by
+      intro g1 g2 x
+      rfl
+    ga_one := by
+      intro x
+      rfl }
+
+theorem s3Action_transitive : GroupAction.transitive (G := S3) (X := Fin 3) :=
+  permGroupAction_transitive (Fin 3)
+
+#check s3ActionFin3
+#check s3Action_transitive

@@ -6,11 +6,7 @@ Date: June 2026
 Copyright (c) 2026 Frankie Feng-Cheng WANG. All rights reserved.
 Repository: https://github.com/FrankieeW/
 -/
-import Mathlib.Tactic
-import Mathlib.Data.SetLike.Basic
-import Mathlib.Data.Fintype.Card
 import Mathlib.Algebra.Group.Basic
-import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.GroupTheory.Perm.Basic
 
 /-! ## Definitions: group actions -/
