@@ -420,3 +420,5 @@ lake-manifest.json
 
 # TeX bakcup files .bak0 .bak1 ...
 *.bak[0-9]*
+tex/out/report.bbl-SAVE-ERROR
+tex/out/report.bbf-SAVE-ERROR
