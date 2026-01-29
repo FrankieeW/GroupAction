@@ -227,9 +227,9 @@ Now, we present the definition of a group action both mathematically and in Lean
 \bigskip
 
 \leancodefile[
-	firstline=20,
-	lastline=23,
-	firstnumber=20
+	firstline=16,
+	lastline=19,
+	firstnumber=16
 ]{../lean/GroupAction/Defs.lean}
 {https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Defs.lean}
 
@@ -250,9 +250,9 @@ faithful if
 In other words, no nontrivial group element acts trivially on all of $X$.
 
 \leancodefile[
-	firstline=26,
-	lastline=30,
-	firstnumber=26
+	firstline=25,
+	lastline=26,
+	firstnumber=25
 ]{../lean/GroupAction/Defs.lean}
 {https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Defs.lean}
 
@@ -266,9 +266,9 @@ $x_1, x_2 \in X$, there exists an element $g \in G$ such that
 This means that $X$ consists of a single orbit under the action of $G$.
 
 \leancodefile[
-	firstline=34,
-	lastline=38,
-	firstnumber=34
+	firstline=33,
+	lastline=34,
+	firstnumber=33
 ]{../lean/GroupAction/Defs.lean}
 {https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Defs.lean}
 
@@ -286,7 +286,7 @@ The axiom proofs are immediate by reflexivity: composition of permutations and f
 evaluation commute definitionally in Lean.
 
 Two standard properties of this action are faithful and transitive:
-\leancodefile[firstline=28,lastline=42,firstnumber=28]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=28,lastline=41,firstnumber=28]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 The instance \texttt{DecidableEq X} is required because \texttt{Equiv.swap} constructs a
 permutation by branching on whether two elements are equal, which needs decidable equality.
 
@@ -348,12 +348,12 @@ This generalizes the complex example by abstracting over the coefficient monoid.
 \subsection{Dihedral group action on a square}
 Let $D_4$ be the symmetry group of a square, acting on $\mathbb{Z}/4\mathbb{Z}$.
 
-\leancodefile[firstline=134,lastline=155,firstnumber=134]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=139,lastline=155,firstnumber=139]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 
 \subsection{Symmetric group S₃ acting on \{1,2,3\}}
 The symmetric group on 3 elements provides the canonical example of a transitive group action. This is the standard permutation representation of $S_3$.
 
-\leancodefile[firstline=166,lastline=181,firstnumber=166]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 
 The action is transitive: for any two elements $a, b \in \{1,2,3\}$, there exists a permutation $\sigma \in S_3$ such that $\sigma(a) = b$.
 
@@ -442,7 +442,7 @@ This step bridges the individual permutations $\sigma_g$ to a group homomorphism
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=66,lastline=72,firstnumber=66]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=69,lastline=73,firstnumber=69]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 
 \subsubsection{Step 4: Verify homomorphism properties}
 This step establishes that $\phi$ is a group homomorphism by verifying it preserves multiplication and the identity element, completing the proof that $\phi$ is a valid group representation.
@@ -465,7 +465,7 @@ This step establishes that $\phi$ is a group homomorphism by verifying it preser
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=78,lastline=99,firstnumber=78]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=78,lastline=100,firstnumber=78]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 
 \subsubsection{Step 5: Package the theorem}
 Now just need to combine everything into the final theorem statement.
@@ -487,7 +487,7 @@ Now just need to combine everything into the final theorem statement.
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=101,lastline=107,firstnumber=101]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=103,lastline=108,firstnumber=103]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 
 \subsection{Proof sketch (informal)}
 To show that $\sigma_g$ is a bijection, compute
@@ -503,15 +503,15 @@ First, define the underlying action map:
 \leancodefile[firstline=26,lastline=29,firstnumber=26]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 
 Then package it as a permutation using the inverse action:
-\leancodefile[firstline=31,lastline=63,firstnumber=31]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=34,lastline=64,firstnumber=34]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 Using \texttt{\#check} on \texttt{sigmaPerm} confirms it has type
-\leancodefile[firstline=64,lastline=64,firstnumber=64]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=65,lastline=65,firstnumber=65]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 This confirms the map $g \mapsto \sigma_g$ is a well-defined function from $G$ to $\mathrm{Sym}(X)$.
 Define the representation and its basic properties:
-\leancodefile[firstline=66,lastline=99,firstnumber=66]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=69,lastline=100,firstnumber=69]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 
 Finally, package the existence statement:
-\leancodefile[firstline=101,lastline=107,firstnumber=101]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=103,lastline=108,firstnumber=103]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 
 \section{Stabilizers}
 For a fixed $x \in X$, the stabilizer is the subset
@@ -530,7 +530,7 @@ so $g^{-1} \in G_x$.
 
 \subsection{Lean code}
 Start from the set definition:
-\leancodefile[firstline=22,lastline=25,firstnumber=22]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
+\leancodefile[firstline=24,lastline=25,firstnumber=24]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
 
 Package it as a subgroup by checking closure:
 % 加一段介绍 carrier one_mem mul_mem inv_mem
@@ -543,10 +543,10 @@ Define the subgroup structure by providing proofs of the subgroup axioms:
 	\item \texttt{inv\_mem'}: if $g$ fixes $x$, then so does $g^{-1}$ by combining
 	      \texttt{ga\_mul} and \texttt{ga\_one}.
 \end{itemize}
-\leancodefile[firstline=27,lastline=52,firstnumber=27]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
+\leancodefile[firstline=28,lastline=52,firstnumber=28]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
 
 Then show the set is the carrier of a subgroup:
-\leancodefile[firstline=54,lastline=57,firstnumber=54]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
+\leancodefile[firstline=55,lastline=57,firstnumber=55]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
 
 \iffalse
 	\section{Main Theorem}
