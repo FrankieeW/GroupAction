@@ -36,18 +36,39 @@
 
 \usepackage{amsthm} % For proof environment
 \newtheorem{lemma}{Lemma} % define lemma environment
+
+% Definition environment matching problem environment style from assignment.cls
+% Using framed environment like the problem environment in assignment.cls
+\newenvironment{mydef} {
+  \begin{framed}
+} {
+  \end{framed}
+  \bigskip
+}
+
 % \usepackage{pdfpages} % 用于插入 PDF
 \usepackage{fontspec}
 \setmonofont{FreeMono}
 \usepackage{hyperref} % ← 必须显式、提前
 \usepackage{minted}
 \newmintinline[lean]{lean4}{bgcolor=white}
-\newminted[leancode]{lean4}{fontsize=\footnotesize,breaklines,breakanywhere}
+\newminted[leancode]{lean4}{fontsize=\footnotesize,breaklines,breakanywhere,tabsize=4,showspaces=false}
 \newcommand{\leancodeurl}{}
 \newcommand{\setleancodeurl}[1]{\renewcommand{\leancodeurl}{#1}}
 \renewcommand{\theFancyVerbLine}{\arabic{FancyVerbLine}}
 \renewcommand{\FancyVerbFormatLine}[1]{\href{\leancodeurl\#L\arabic{FancyVerbLine}}{#1}}
+
+% Original environment for inline code (deprecated, use leancodefile instead)
 \newenvironment{leancodegit}[3][]{\VerbatimEnvironment\setleancodeurl{#3}\begin{leancode}[#1]}{\end{leancode}}
+
+% New command to import code directly from .lean files
+% Usage: \leancodefile[minted options]{local/path/to/file.lean}{github_url}
+% Example: \leancodefile[firstline=20,lastline=25]{../lean/GroupAction/Defs.lean}{https://github.com/.../Defs.lean}
+\newcommand{\leancodefile}[3][]{%
+  \setleancodeurl{#3}%
+  \inputminted[fontsize=\footnotesize,breaklines,breakanywhere,tabsize=4,showspaces=false,linenos=true,#1]{lean4}{#2}%
+}
+
 \usemintedstyle{tango}
 % \usepackage{hyperref}
 % \usepackage{embedfile}
@@ -63,6 +84,10 @@
 %-------------------------------------------------------------------------------
 % ASSIGNMENT INFORMATION
 %-------------------------------------------------------------------------------
+
+% Fix for fancyhdr warning: increase headheight and adjust topmargin
+\setlength{\headheight}{29.34845pt}
+\addtolength{\topmargin}{-17.34845pt}
 
 \title{Formalizing Group Action in Lean} % Assignment title
 \author{Frankie Feng-Cheng WANG} % Student name
@@ -86,9 +111,9 @@
 
 This report presents a Lean~4 formalisation of \textbf{group actions}, organised around three interrelated themes:
 \begin{enumerate}
-  \item \textbf{Core definitions:} the \texttt{GroupAction} typeclass, together with the notions of faithfulness and transitivity;
-  \item \textbf{Concrete examples:} a selection of standard group actions illustrating the abstract definitions;
-  \item \textbf{Key theorems:} the construction of the permutation representation and the subgroup structure of stabilisers.
+	\item \textbf{Core definitions:} the \texttt{GroupAction} typeclass, together with the notions of faithfulness and transitivity;
+	\item \textbf{Concrete examples:} a selection of standard group actions illustrating the abstract definitions;
+	\item \textbf{Key theorems:} the construction of the permutation representation and the subgroup structure of stabilisers.
 \end{enumerate}
 
 The mathematical development and theorem numbering follow
@@ -104,82 +129,66 @@ All code snippets in this report are hyperlinked to the corresponding lines in t
 The principal results formalised in this project are the existence of the permutation representation associated to a group action and the fact that stabilisers form subgroups. These are stated below and proved in later sections.
 
 \begin{quote}
-\textbf{Theorem 16.3.}
-Let $X$ be a $G$-set. For each $g \in G$, the map
-\[
-\sigma_g : X \to X, \qquad \sigma_g(x) = g \cdot x,
-\]
-is a permutation of $X$. The assignment $\phi : G \to \mathrm{Sym}(X)$ defined by
-$\phi(g) = \sigma_g$ is a group homomorphism, and for all $g \in G$ and $x \in X$,
-\[
-\phi(g)(x) = g \cdot x.
-\]
+	\textbf{Theorem 16.3.}
+	Let $X$ be a $G$-set. For each $g \in G$, the map
+	\[
+		\sigma_g : X \to X, \qquad \sigma_g(x) = g \cdot x,
+	\]
+	is a permutation of $X$. The assignment $\phi : G \to \mathrm{Sym}(X)$ defined by
+	$\phi(g) = \sigma_g$ is a group homomorphism, and for all $g \in G$ and $x \in X$,
+	\[
+		\phi(g)(x) = g \cdot x.
+	\]
 \end{quote}
 
 \begin{quote}
-\textbf{Theorem 16.12.}
-Let $X$ be a $G$-set and let $x \in X$. The stabiliser of $x$ in $G$, defined by
-\[
-G_x = \{\, g \in G \mid g \cdot x = x \,\},
-\]
-is a subgroup of $G$.
+	\textbf{Theorem 16.12.}
+	Let $X$ be a $G$-set and let $x \in X$. The stabiliser of $x$ in $G$, defined by
+	\[
+		G_x = \{\, g \in G \mid g \cdot x = x \,\},
+	\]
+	is a subgroup of $G$.
 \end{quote}
 
 
 \iffalse
-  \section{Background and Design Choices}
-  \subsection{Why a custom action class}
-  Mathlib already provides \texttt{MulAction}, but I define a small custom class
-  \texttt{GroupAction} with just two axioms: compatibility with multiplication and
-  the identity action. This keeps the development minimal and makes it easy to map
-  Lean lines to textbook lines. The cost is that I cannot use existing \texttt{MulAction}
-  lemmas, but the benefit is transparency.
+	\section{Background and Design Choices}
+	\subsection{Why a custom action class}
+	Mathlib already provides \texttt{MulAction}, but I define a small custom class
+	\texttt{GroupAction} with just two axioms: compatibility with multiplication and
+	the identity action. This keeps the development minimal and makes it easy to map
+	Lean lines to textbook lines. The cost is that I cannot use existing \texttt{MulAction}
+	lemmas, but the benefit is transparency.
 
-  \subsection{What Lean is checking}
-  Lean treats each statement as a typed object. When I define \texttt{sigmaPerm}, Lean
-  checks that the inverse function is a two-sided inverse. When I define \texttt{phi},
-  Lean checks that its image lies in the group \texttt{Equiv.Perm X} and that
-  multiplication is permutation composition. This explicit checking prevents hidden
-  gaps that can slip into informal proofs.
+	\subsection{What Lean is checking}
+	Lean treats each statement as a typed object. When I define \texttt{sigmaPerm}, Lean
+	checks that the inverse function is a two-sided inverse. When I define \texttt{phi},
+	Lean checks that its image lies in the group \texttt{Equiv.Perm X} and that
+	multiplication is permutation composition. This explicit checking prevents hidden
+	gaps that can slip into informal proofs.
 \fi
 
 \section{Definitions}
 This section introduces the group action class and the standing assumptions used
-throughout the file. Each line of the code blocks in this report is clickable and links
-to the corresponding source line in the GitHub v1.0.0 tag.
+throughout the file.
 \subsection{Group Action}
+\begin{mydef}
+	A \textbf{group\ action} of a group $G$ on a set $X$ is a map
+	\[
+		\cdot : G \times X \to X,
+	\]
+	satisfying the following axioms for all $g_1, g_2 \in G$ and $x \in X$:
+	\begin{itemize}
+		\item (Compatibility) $(g_1 g_2) \cdot x = g_1 \cdot (g_2 \cdot x)$;
+		\item (Identity) $1 \cdot x = x$.
+	\end{itemize}
+\end{mydef}
 I first declare a minimal class for group actions:
-\begin{leancodegit}[firstnumber=20]{lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Defs.lean}
-  class GroupAction (G : Type*) [Monoid G] (X : Type*) where
-  act : G → X → X
-  ga_mul : ∀ g₁ g₂ x, act (g₁ * g₂) x = act g₁ (act g₂ x)
-  ga_one : ∀ x, act 1 x = x
-\end{leancodegit}
-Note that I use \texttt{Monoid} here because the definition of a group action does not
-require inverses. Later results about permutation representations and stabilizers
-require a \texttt{Group}, so the subsequent sections assume \texttt{[Group G]}.
-\subsection{Faithful and Transitive Actions}
-Next, I define the faithful and transitive predicates for actions:
-\begin{leancodegit}[firstnumber=26]{lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Defs.lean}
-  /-! ## Definitions: act faithfully -/
-  /-- A group action is faithful if different group elements
-  act differently on at least one element of `X`. -/
-  def GroupAction.faithful {G : Type*} [Group G] {X : Type*} [GroupAction G X] : Prop :=
-  ∀ g₁ g₂ : G, (∀ x : X, GroupAction.act g₁ x = GroupAction.act g₂ x) → g₁ = g₂
-
-  /-! ## Definitions: transitive -/
-  /-- A group action is transitive if for any `x₁, x₂ ∈ X`,
-  there exists a group element `g ∈ G` such that `g • x₁ = x₂`. -/
-  def GroupAction.transitive {G : Type*} [Group G] {X : Type*} [GroupAction G X] : Prop :=
-  ∀ x₁ x₂ : X, ∃ g : G, GroupAction.act g x₁ = x₂
-\end{leancodegit}
+\leancodefile[firstline=20,lastline=23,firstnumber=20]{../lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Defs.lean}
 
 
 Throughout the file I work with a group $G$ acting on a type $X$:
-\begin{leancodegit}[firstnumber=13]{lean/GroupAction/Basic.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Basic.lean}
-  -- Fix a group and an action instance.
-  variable {G : Type*} [Group G] {X : Type*} [GroupAction G X]
-\end{leancodegit}
+\leancodefile[firstline=13,lastline=13,firstnumber=13]{../lean/GroupAction/Basic.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Basic.lean}
 
 \section{Concrete Examples of Group Actions}
 This section presents several concrete instances of the \texttt{GroupAction} class,
@@ -189,53 +198,20 @@ illustrating how the abstract definition applies to familiar mathematical struct
 Let $X$ be any type. The symmetric group $\mathrm{Sym}(X)$ acts on $X$ by evaluation:
 for $\sigma \in \mathrm{Sym}(X)$ and $x \in X$, define $\sigma \cdot x := \sigma(x)$.
 
-\begin{leancodegit}[firstnumber=19]{lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
-  instance permGroupAction (X : Type*) : GroupAction (Equiv.Perm X) X :=
-  { act := fun g x => g x
-  ga_mul := by
-  intro g1 g2 x
-  rfl
-  ga_one := by
-  intro x
-  rfl }
-\end{leancodegit}
+\leancodefile[firstline=19,lastline=26,firstnumber=19]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
 
 The axiom proofs are immediate by reflexivity: composition of permutations and function
 evaluation commute definitionally in Lean.
 
 Two standard properties of this action are faithful and transitive:
-\begin{leancodegit}[firstnumber=28]{lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
-  theorem permGroupAction_faithful (X : Type*) :
-  GroupAction.faithful (G := Equiv.Perm X) (X := X) :=
-  by
-  intro g₁ g₂ h
-  ext x
-  exact h x
-
-  theorem permGroupAction_transitive
-  (X : Type*) [DecidableEq X] :
-  GroupAction.transitive (G := Equiv.Perm X) (X := X) :=
-  by
-  intro x₁ x₂
-  refine ⟨Equiv.swap x₁ x₂, ?_⟩
-  simp [GroupAction.act]
-\end{leancodegit}
+\leancodefile[firstline=28,lastline=42,firstnumber=28]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
 The instance \texttt{DecidableEq X} is required because \texttt{Equiv.swap} constructs a
 permutation by branching on whether two elements are equal, which needs decidable equality.
 
 \subsection{Group acting on itself by left multiplication}
 Every group $G$ acts on itself by left multiplication: $g_1 \cdot g_2 := g_1 * g_2$.
 
-\begin{leancodegit}[firstnumber=44]{lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
-  instance groupAsGSet (G : Type*) [Group G] : GroupAction G G :=
-  { act := fun g1 g2 => g1 * g2
-  ga_mul := by
-  intro g1 g2 g3
-  rw [mul_assoc]
-  ga_one := by
-  intro g
-  rw [one_mul] }
-\end{leancodegit}
+\leancodefile[firstline=44,lastline=51,firstnumber=44]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
 
 The \texttt{ga\_mul} axiom follows from associativity of group multiplication, and
 \texttt{ga\_one} from the identity axiom.
@@ -244,42 +220,14 @@ The \texttt{ga\_mul} axiom follows from associativity of group multiplication, a
 A subgroup $H \leq G$ acts on $G$ by left multiplication. Elements of $H$ are coerced
 to elements of $G$ using \texttt{(h : G)}.
 
-\begin{leancodegit}[firstnumber=55]{lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
-  instance subgroupAsGSet {G : Type*} [Group G] (H : Subgroup G) : GroupAction H G :=
-  { act := fun h g => (h : G) * g
-  ga_mul := by
-  intros
-  simp [mul_assoc]
-  ga_one := by
-  intros
-  simp }
-\end{leancodegit}
+\leancodefile[firstline=55,lastline=64,firstnumber=55]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
 
 The \texttt{simp} tactic handles the coercion and applies associativity and identity axioms.
 
 \subsection{Conjugation action of a subgroup on itself}
 A subgroup $H$ acts on itself by conjugation: $h_1 \cdot h_2 := h_1 h_2 h_1^{-1}$.
 
-\begin{leancodegit}[firstnumber=66]{lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
-  instance subgroupAsGSetConjugation {G : Type*} [Group G] (H : Subgroup G) : GroupAction H H :=
-  {
-  act := fun h g => h * g * h⁻¹
-  ga_mul := by
-  intro g₁ g₂ g₃
-  -- one step
-  -- simp [mul_assoc]
-  -- in detail
-  simp
-  -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃ * g₂⁻¹) * g₁⁻¹
-  rw [← mul_assoc g₁]
-  -- goal state: g₁ * g₂ * g₃ * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
-  rw [mul_assoc g₁ g₂]
-  -- goal state:  g₁ * (g₂ * g₃) * (g₂⁻¹ * g₁⁻¹) = g₁ * (g₂ * g₃) * g₂⁻¹ * g₁⁻¹
-  rw [← mul_assoc]
-  ga_one := by
-  intros
-  simp }
-\end{leancodegit}
+\leancodefile[firstline=66,lastline=84,firstnumber=66]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
 % mul_assoc.{u_1} {G : Type u_1} [Semigroup G] (a b c : G) : a * b * c = a * (b * c)
 The \texttt{mul\_assoc} lemma is from mathlib and states associativity of multiplication:
 
@@ -301,18 +249,7 @@ In detail, it will rewrite the left hand side \texttt{g₁ * (g₂ * g₃ * g₂
 The multiplicative group $\mathbb{C}^\times$ of nonzero complex numbers acts on
 $\mathbb{C}^n$ by scalar multiplication.
 
-\begin{leancodegit}[firstnumber=88]{lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
-  instance vectorSpaceAsCStarSet (n : ℕ) : GroupAction (ℂˣ) (Fin n → ℂ) :=
-  { act := fun r v => fun i => (r : ℂ) * v i
-  ga_mul := by
-  intros r1 r2 v
-  ext i
-  simp [mul_assoc]
-  ga_one := by
-  intro v
-  ext i
-  simp }
-\end{leancodegit}
+\leancodefile[firstline=88,lastline=98,firstnumber=88]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
 
 Here \texttt{ℂˣ} denotes the units of $\mathbb{C}$ (invertible elements), and
 \texttt{Fin n → ℂ} represents functions from $\{0, \ldots, n-1\}$ to $\mathbb{C}$
@@ -322,47 +259,14 @@ pointwise.
 \subsection{Scalar action via units}
 The unit group $\alpha^\times$ of a monoid $\alpha$ acts on $\alpha^n$ by scalar multiplication.
 
-\begin{leancodegit}[firstnumber=103]{lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
-  instance vectorSpaceAsUnitSet
-  (α : Type*) [Monoid α]
-  (n : ℕ) :
-  GroupAction (αˣ) (Fin n → α) :=
-  { act := fun r v => fun i => (r : α) * v i
-  ga_mul := by
-  intros r1 r2 v
-  ext i
-  simp [mul_assoc]
-  ga_one := by
-  intro v
-  ext i
-  simp }
-\end{leancodegit}
+\leancodefile[firstline=103,lastline=115,firstnumber=103]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
 
 This generalizes the complex example by abstracting over the coefficient monoid.
 
 \subsection{Dihedral group action on a square}
 Let $D_4$ be the symmetry group of a square, acting on $\mathbb{Z}/4\mathbb{Z}$.
 
-\begin{leancodegit}[firstnumber=134]{lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
-  abbrev D4 := DihedralGroup 4
-  abbrev Vertex := ZMod 4
-
-  def d4Act (g : D4) (x : ZMod 4) : ZMod 4 :=
-  match g with
-  | DihedralGroup.r i => x - i
-  | DihedralGroup.sr i => i - x
-
-  instance d4ActionZMod4 : GroupAction D4 (ZMod 4) :=
-  { act := d4Act
-  ga_mul := by
-  intro g1 g2 x
-  cases g1 <;> cases g2 <;>
-  simp [d4Act, sub_eq_add_neg] <;> ring
-  ga_one := by
-  intro x
-  simp [DihedralGroup.one_def, d4Act, -DihedralGroup.r_zero]
-  }
-\end{leancodegit}
+\leancodefile[firstline=134,lastline=155,firstnumber=134]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Examples.lean}
 
 \section{Permutation Representation}
 The core construction is the map $\sigma_g : X \to X$ given by $\sigma_g(x) = g \cdot x$.
@@ -375,99 +279,28 @@ $\sigma_{g^{-1}}(\sigma_g(x)) = (g^{-1} g) \cdot x = 1 \cdot x = x$, and similar
 $\sigma_g(\sigma_{g^{-1}}(x)) = x$. The representation is defined by
 $\phi(g) = \sigma_g$, and multiplicativity follows from the action axiom:
 \[
-  \phi(g_1 g_2)(x) = (g_1 g_2) \cdot x = g_1 \cdot (g_2 \cdot x) = (\phi(g_1)\phi(g_2))(x).
+	\phi(g_1 g_2)(x) = (g_1 g_2) \cdot x = g_1 \cdot (g_2 \cdot x) = (\phi(g_1)\phi(g_2))(x).
 \]
 
 \subsection{Lean code}
 First, define the underlying action map:
-\begin{leancodegit}[firstnumber=26]{lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
-  /-- The action map `sigma g : X → X`
-  given by `x ↦ g • x`. -/
-  def sigma (g : G) : X → X :=
-  -- We use the action directly.
-  fun x => GroupAction.act g x
-\end{leancodegit}
+\leancodefile[firstline=26,lastline=29,firstnumber=26]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
 
 Then package it as a permutation using the inverse action:
-\begin{leancodegit}[firstnumber=33]{lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
-  /-- The permutation of `X` induced by `g`.
-  The inverse is given by the action of `g⁻¹`. -/
-  def sigmaPerm (g : G) : Equiv.Perm X :=
-  { toFun := sigma g
-  invFun := sigma g⁻¹
-  left_inv := by
-  intro x
-  -- Step 1: combine `g⁻¹` and `g` using the action axiom.
-  calc
-  GroupAction.act g⁻¹ (GroupAction.act g x) =
-  GroupAction.act (g⁻¹ * g) x := by
-  simpa using (GroupAction.ga_mul g⁻¹ g x).symm
-  -- Step 2: simplify `g⁻¹ * g` to `1`.
-  _ = GroupAction.act (1 : G) x := by
-  simp
-  -- Step 3: the identity acts as the identity on `X`.
-  _ = x := GroupAction.ga_one x
-  right_inv := by
-  intro x
-  -- Step 1: combine `g` and `g⁻¹` using the action axiom.
-  calc
-  GroupAction.act g (GroupAction.act g⁻¹ x) =
-  GroupAction.act (g * g⁻¹) x := by
-  simpa using (GroupAction.ga_mul g g⁻¹ x).symm
-  -- Step 2: simplify `g * g⁻¹` to `1`.
-  _ = GroupAction.act (1 : G) x := by
-  simp
-  -- Step 3: the identity acts as the identity on `X`.
-  _ = x := GroupAction.ga_one x }
-\end{leancodegit}
+\leancodefile[firstline=31,lastline=63,firstnumber=31]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
 Using \texttt{\#check} on \texttt{sigmaPerm} confirms it has type
-\begin{leancodegit}[firstnumber=64]{lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
-  #check sigmaPerm
-\end{leancodegit}
+\leancodefile[firstline=64,lastline=64,firstnumber=64]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
 This confirms the map $g \mapsto \sigma_g$ is a well-defined function from $G$ to $\mathrm{Sym}(X)$.
 Define the representation and its basic properties:
-\begin{leancodegit}[firstnumber=66]{lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
-  /-- The permutation representation `phi : G → Equiv.Perm X`
-  induced by the action. -/
-  def phi (g : G) : Equiv.Perm X :=
-  sigmaPerm g
-
-  -- `phi` agrees with the action on elements.
-  lemma phi_apply (g : G) (x : X) : phi g x = GroupAction.act g x := rfl
-
-  lemma phi_mul (g₁ g₂ : G) :
-  phi (X := X) (g₁ * g₂) = phi (X := X) g₁ * phi (X := X) g₂ := by
-  -- Reduce equality of permutations to pointwise equality.
-  apply Equiv.ext
-  intro (x : X)
-  calc
-  phi (g₁ * g₂) x = GroupAction.act (g₁ * g₂) x := rfl
-  _ = GroupAction.act g₁ (GroupAction.act g₂ x) := GroupAction.ga_mul g₁ g₂ x
-
-  lemma phi_one : phi (1 : G) = (1 : Equiv.Perm X) := by
-  apply Equiv.ext
-  intro x
-  calc
-  phi (1 : G) x = GroupAction.act (1 : G) x := rfl
-  _ = x := GroupAction.ga_one x
-  _ = (1 : Equiv.Perm X) x := by simp [Equiv.Perm.one_apply]
-\end{leancodegit}
+\leancodefile[firstline=66,lastline=99,firstnumber=66]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
 
 Finally, package the existence statement:
-\begin{leancodegit}[firstnumber=101]{lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
-  -- Existence of the permutation representation with the required properties.
-  theorem group_action_to_perm_representation :
-  ∃ (φ : G → Equiv.Perm X),
-  (∀ g x, φ g x = GroupAction.act g x) ∧
-  (∀ g₁ g₂, φ (g₁ * g₂) = φ g₁ * φ g₂) ∧
-  (φ 1 = 1) := by
-  exact ⟨phi, ⟨phi_apply, ⟨phi_mul, phi_one⟩⟩⟩
-\end{leancodegit}
+\leancodefile[firstline=101,lastline=107,firstnumber=101]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
 
 \section{Stabilizers}
 For a fixed $x \in X$, the stabilizer is the subset
 \[
-  G_x = \{ g \in G \mid g \cdot x = x \}.
+	G_x = \{ g \in G \mid g \cdot x = x \}.
 \]
 In Lean this is first defined as a set, then shown to be the carrier of a subgroup,
 and finally packaged as a \texttt{Subgroup}.
@@ -481,86 +314,47 @@ so $g^{-1} \in G_x$.
 
 \subsection{Lean code}
 Start from the set definition:
-\begin{leancodegit}[firstnumber=22]{lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Stabilizer.lean}
-  /-- The stabilizer set
-  `G_x = { g ∈ G | g • x = x }`. -/
-  def stabilizerSet (x : X) : Set G :=
-  -- Membership means g fixes x.
-    { g : G | GroupAction.act g x = x }
-\end{leancodegit}
+\leancodefile[firstline=22,lastline=25,firstnumber=22]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Stabilizer.lean}
 
 Package it as a subgroup by checking closure:
 % 加一段介绍 carrier one_mem mul_mem inv_mem
 Define the subgroup structure by providing proofs of the subgroup axioms:
 \begin{itemize}
-  \item \texttt{carrier}: the underlying set is \texttt{stabilizerSet x}.
-  \item \texttt{one\_mem'}: the identity fixes every $x$ by the \texttt{ga\_one} axiom.
-  \item \texttt{mul\_mem'}: if $g_1$ and $g_2$ fix $x$, then so does $g_1 g_2$ by the
-        \texttt{ga\_mul} axiom.
-  \item \texttt{inv\_mem'}: if $g$ fixes $x$, then so does $g^{-1}$ by combining
-        \texttt{ga\_mul} and \texttt{ga\_one}.
+	\item \texttt{carrier}: the underlying set is \texttt{stabilizerSet x}.
+	\item \texttt{one\_mem'}: the identity fixes every $x$ by the \texttt{ga\_one} axiom.
+	\item \texttt{mul\_mem'}: if $g_1$ and $g_2$ fix $x$, then so does $g_1 g_2$ by the
+	      \texttt{ga\_mul} axiom.
+	\item \texttt{inv\_mem'}: if $g$ fixes $x$, then so does $g^{-1}$ by combining
+	      \texttt{ga\_mul} and \texttt{ga\_one}.
 \end{itemize}
-\begin{leancodegit}[firstnumber=27]{lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Stabilizer.lean}
-  /-- The stabilizer `G_x` as a subgroup of `G`. -/
-  def stabilizer (x : X) : Subgroup G := by
-  exact
-    { carrier := stabilizerSet (G := G) (X := X) x
-      one_mem' := by
-      -- The identity fixes every x.
-      simp [stabilizerSet, GroupAction.ga_one x]
-      mul_mem' := by
-      intro g₁ g₂ hg₁ hg₂
-      calc
-      -- Closure under multiplication uses the action axiom.
-      GroupAction.act (g₁ * g₂) x = GroupAction.act g₁ (GroupAction.act g₂ x) := by
-      simpa using (GroupAction.ga_mul g₁ g₂ x)
-      _ = GroupAction.act g₁ x := by
-      rw [hg₂]
-      _ = x := hg₁
-      inv_mem' := by
-      intro g hg
-      calc
-      -- If g fixes x then g⁻¹ fixes x.
-      GroupAction.act g⁻¹ x = GroupAction.act g⁻¹ (GroupAction.act g x) := by
-      rw [hg]
-      _ = GroupAction.act (g⁻¹ * g) x := by
-      simpa using (GroupAction.ga_mul g⁻¹ g x).symm
-      _ = GroupAction.act (1 : G) x := by
-      simp
-      _ = x := GroupAction.ga_one x }
-\end{leancodegit}
+\leancodefile[firstline=27,lastline=52,firstnumber=27]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Stabilizer.lean}
 
 Then show the set is the carrier of a subgroup:
-\begin{leancodegit}[firstnumber=54]{lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Stabilizer.lean}
-  /-- The stabilizer set is the carrier of a subgroup of `G`. -/
-  theorem stabilizer_set_is_subgroup (x : X) :
-  ∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
-  refine ⟨stabilizer (G := G) (X := X) x, rfl⟩
-\end{leancodegit}
+\leancodefile[firstline=54,lastline=57,firstnumber=54]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Stabilizer.lean}
 
 \iffalse
-  \section{Main Theorem}
-  The Lean theorem \texttt{group\_action\_to\_perm\_representation} packages the permutation
-  representation together with its key properties. The proof uses the lemmas from the
-  previous section: \texttt{phi\_apply}, \texttt{phi\_mul}, and \texttt{phi\_one}.
+	\section{Main Theorem}
+	The Lean theorem \texttt{group\_action\_to\_perm\_representation} packages the permutation
+	representation together with its key properties. The proof uses the lemmas from the
+	previous section: \texttt{phi\_apply}, \texttt{phi\_mul}, and \texttt{phi\_one}.
 \fi
 
 \section{What Lean Guarantees}
 Formalizing these constructions in Lean provides guarantees that informal proofs cannot match.
 When Lean accepts a definition or theorem, it has verified:
 \begin{itemize}
-  \item \textbf{Types are correct.} The function \texttt{phi : G → Equiv.Perm X} has the claimed type.
-        Lean checks that \texttt{sigmaPerm g} is actually a permutation (a bijection), not just a function.
-        If we mistakenly defined a non-bijective map, Lean would reject it.
-  \item \textbf{No hidden assumptions.} Every lemma explicitly lists its hypotheses. If a proof uses
-        associativity, the code must invoke \texttt{mul\_assoc} or the \texttt{ga\_mul} axiom.
-        There are no ``clearly'' or ``it follows that'' steps that skip justification.
-  \item \textbf{Axioms match definitions.} The \texttt{GroupAction} class requires \texttt{ga\_mul}
-        and \texttt{ga\_one}. If we omitted \texttt{ga\_one}, the proof of \texttt{phi\_one} would fail
-        because Lean would have no way to show $1 \cdot x = x$.
-  \item \textbf{Subgroup structure is verified.} When we package the stabilizer as a \texttt{Subgroup},
-        Lean checks that we provided proofs of closure under multiplication, inverses, and identity.
-        The type system prevents us from claiming ``the stabilizer is a subgroup'' without proving it.
+	\item \textbf{Types are correct.} The function \texttt{phi : G → Equiv.Perm X} has the claimed type.
+	      Lean checks that \texttt{sigmaPerm g} is actually a permutation (a bijection), not just a function.
+	      If we mistakenly defined a non-bijective map, Lean would reject it.
+	\item \textbf{No hidden assumptions.} Every lemma explicitly lists its hypotheses. If a proof uses
+	      associativity, the code must invoke \texttt{mul\_assoc} or the \texttt{ga\_mul} axiom.
+	      There are no ``clearly'' or ``it follows that'' steps that skip justification.
+	\item \textbf{Axioms match definitions.} The \texttt{GroupAction} class requires \texttt{ga\_mul}
+	      and \texttt{ga\_one}. If we omitted \texttt{ga\_one}, the proof of \texttt{phi\_one} would fail
+	      because Lean would have no way to show $1 \cdot x = x$.
+	\item \textbf{Subgroup structure is verified.} When we package the stabilizer as a \texttt{Subgroup},
+	      Lean checks that we provided proofs of closure under multiplication, inverses, and identity.
+	      The type system prevents us from claiming ``the stabilizer is a subgroup'' without proving it.
 \end{itemize}
 
 These checks prevent common errors: mistaken claims about injectivity, forgotten hypotheses,
@@ -570,8 +364,8 @@ the mathematical claims, not just that it compiles.
 \section{Reflection}
 Writing the proofs in Lean forced me to make every step explicit. In particular:
 \begin{itemize}
-  \item I had to show explicitly that $\sigma_{g^{-1}}$ is an inverse.
-  \item I had to unfold the definition of permutation multiplication.
+	\item I had to show explicitly that $\sigma_{g^{-1}}$ is an inverse.
+	\item I had to unfold the definition of permutation multiplication.
 \end{itemize}
 The resulting code is not shorter than a textbook proof, but it is more precise.
 An external examiner can read the surrounding explanations and then see that each
@@ -581,28 +375,28 @@ Lean line matches a specific mathematical claim.
 \subsection{Specific challenges encountered}
 Several technical hurdles emerged during the formalization:
 \begin{itemize}
-  \item \textbf{Typeclass resolution:} Ensuring Lean could automatically find the \texttt{GroupAction}
-        instance in complex contexts required careful use of explicit type annotations (e.g., \texttt{(G := G)}).
-  \item \textbf{Equivalence mechanics:} Constructing \texttt{sigmaPerm} as an \texttt{Equiv.Perm X}
-        required providing both \texttt{left\_inv} and \texttt{right\_inv} proofs, which meant carefully
-        applying the \texttt{ga\_mul} axiom in both directions.
-  \item \textbf{Coercions:} Working with subgroups required understanding how Lean coerces elements
-        of type \texttt{H} (a subgroup) to type \texttt{G} (the ambient group) using \texttt{(h : G)}.
-  \item \textbf{Function extensionality:} Proving equality of permutations required \texttt{Equiv.ext},
-        and equality of vector-valued functions required \texttt{ext i}, which were not immediately obvious.
+	\item \textbf{Typeclass resolution:} Ensuring Lean could automatically find the \texttt{GroupAction}
+	      instance in complex contexts required careful use of explicit type annotations (e.g., \texttt{(G := G)}).
+	\item \textbf{Equivalence mechanics:} Constructing \texttt{sigmaPerm} as an \texttt{Equiv.Perm X}
+	      required providing both \texttt{left\_inv} and \texttt{right\_inv} proofs, which meant carefully
+	      applying the \texttt{ga\_mul} axiom in both directions.
+	\item \textbf{Coercions:} Working with subgroups required understanding how Lean coerces elements
+	      of type \texttt{H} (a subgroup) to type \texttt{G} (the ambient group) using \texttt{(h : G)}.
+	\item \textbf{Function extensionality:} Proving equality of permutations required \texttt{Equiv.ext},
+	      and equality of vector-valued functions required \texttt{ext i}, which were not immediately obvious.
 \end{itemize}
 \iffalse
-\subsection{Potential extensions}
-This development could be extended in several directions:
-\begin{itemize}
-  \item \textbf{Orbit-stabilizer theorem:} Formalize the relationship $|G| = |\text{Orb}(x)| \cdot |G_x|$
-        for finite groups, which requires defining orbits and proving Lagrange's theorem.
-  \item \textbf{Burnside's lemma:} Count orbits using the formula involving fixed points.
-  \item \textbf{Actions on cosets:} Show that a group acts on the left cosets of a subgroup,
-        yielding the standard permutation representation.
-  \item \textbf{Cayley's theorem:} Specialize the permutation representation to the case where
-        $G$ acts on itself, proving every group embeds in a symmetric group.
-\end{itemize}
+	\subsection{Potential extensions}
+	This development could be extended in several directions:
+	\begin{itemize}
+		\item \textbf{Orbit-stabilizer theorem:} Formalize the relationship $|G| = |\text{Orb}(x)| \cdot |G_x|$
+		      for finite groups, which requires defining orbits and proving Lagrange's theorem.
+		\item \textbf{Burnside's lemma:} Count orbits using the formula involving fixed points.
+		\item \textbf{Actions on cosets:} Show that a group acts on the left cosets of a subgroup,
+		      yielding the standard permutation representation.
+		\item \textbf{Cayley's theorem:} Specialize the permutation representation to the case where
+		      $G$ acts on itself, proving every group embeds in a symmetric group.
+	\end{itemize}
 \fi
 \section{AI Assistance Statement}
 I used AI-assisted tools in a limited and strictly auxiliary manner. Specifically, AI was used to help automate the conversion of Lean source files into \LaTeX\ code blocks for inclusion in this report, and to assist with reorganising a single Lean file into multiple smaller files during the development process. In addition, AI was occasionally used for high-level brainstorming about structure and presentation.
