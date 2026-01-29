@@ -226,17 +226,11 @@ Now, we present the definition of a group action both mathematically and in Lean
 
 \bigskip
 
-\leancodefile[
-	firstline=16,
-	lastline=19,
-	firstnumber=16
-]{../lean/GroupAction/Defs.lean}
-{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Defs.lean}
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 
 Using \texttt{Monoid} instead of \texttt{Group} allows the action to be defined
 for monoids in general. The inverse element is not needed for the axioms.
 However, I will only consider group actions in this project.
-\leancodefile[firstline=13,lastline=13,firstnumber=13]{../lean/GroupAction/Basic.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Basic.lean}
 \subsection{Faithful and transitive actions}
 
 \paragraph{Faithful actions.}
@@ -249,12 +243,7 @@ faithful if
 
 In other words, no nontrivial group element acts trivially on all of $X$.
 
-\leancodefile[
-	firstline=25,
-	lastline=26,
-	firstnumber=25
-]{../lean/GroupAction/Defs.lean}
-{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Defs.lean}
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}.faithful
 
 \paragraph{Transitive actions.}
 An action of a group $G$ on a set $X$ is \textbf{transitive} if for any
@@ -265,12 +254,7 @@ $x_1, x_2 \in X$, there exists an element $g \in G$ such that
 
 This means that $X$ consists of a single orbit under the action of $G$.
 
-\leancodefile[
-	firstline=33,
-	lastline=34,
-	firstnumber=33
-]{../lean/GroupAction/Defs.lean}
-{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Defs.lean}
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}.transitive
 
 \section{Concrete Examples of Group Actions}
 This section presents several concrete instances of the \texttt{GroupAction} class,
@@ -278,39 +262,22 @@ illustrating how the abstract definition applies to familiar mathematical struct
 
 \subsection{Symmetric group acting on a set}
 Let $X$ be any type. The symmetric group $\mathrm{Sym}(X)$ acts on $X$ by evaluation:
-for $\sigma \in \mathrm{Sym}(X)$ and $x \in X$, define $\sigma \cdot x := \sigma(x)$.
-
-\leancodefile[firstline=19,lastline=26,firstnumber=19]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
-
-The axiom proofs are immediate by reflexivity: composition of permutations and function
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 evaluation commute definitionally in Lean.
 
-Two standard properties of this action are faithful and transitive:
-\leancodefile[firstline=28,lastline=41,firstnumber=28]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
-The instance \texttt{DecidableEq X} is required because \texttt{Equiv.swap} constructs a
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 permutation by branching on whether two elements are equal, which needs decidable equality.
 
 \subsection{Group acting on itself by left multiplication}
-Every group $G$ acts on itself by left multiplication: $g_1 \cdot g_2 := g_1 * g_2$.
-
-\leancodefile[firstline=44,lastline=51,firstnumber=44]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
-
-The \texttt{ga\_mul} axiom follows from associativity of group multiplication, and
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 \texttt{ga\_one} from the identity axiom.
 
 \subsection{Subgroup acting on the group}
-A subgroup $H \leq G$ acts on $G$ by left multiplication. Elements of $H$ are coerced
-to elements of $G$ using \texttt{(h : G)}.
-
-\leancodefile[firstline=55,lastline=64,firstnumber=55]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
-
-The \texttt{simp} tactic handles the coercion and applies associativity and identity axioms.
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 
 \subsection{Conjugation action of a subgroup on itself}
-A subgroup $H$ acts on itself by conjugation: $h_1 \cdot h_2 := h_1 h_2 h_1^{-1}$.
-
-\leancodefile[firstline=66,lastline=84,firstnumber=66]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
-% mul_assoc.{u_1} {G : Type u_1} [Semigroup G] (a b c : G) : a * b * c = a * (b * c)
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}Conjugation
 The \texttt{mul\_assoc} lemma is from mathlib and states associativity of multiplication:
 
 \begin{minted}[fontsize=\footnotesize,breaklines,breakanywhere]{lean4}
@@ -328,34 +295,17 @@ For example the \texttt{rw [← mul\_assoc g₁]} will aotumatically find the pa
 % g₁ * (g₂ * g₃ * g₂⁻¹)-> g₁ * (g₂ * g₃) * g₂⁻¹
 In detail, it will rewrite the left hand side \texttt{g₁ * (g₂ * g₃ * g₂⁻¹)} to \texttt{g₁ * (g₂ * g₃) * g₂⁻¹} according to the right to left direction of the lemma \texttt{mul\_assoc}.
 \subsection{Scalar action on complex vector spaces}
-The multiplicative group $\mathbb{C}^\times$ of nonzero complex numbers acts on
-$\mathbb{C}^n$ by scalar multiplication.
-
-\leancodefile[firstline=88,lastline=98,firstnumber=88]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
-
-Here \texttt{ℂˣ} denotes the units of $\mathbb{C}$ (invertible elements), and
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 \texttt{Fin n → ℂ} represents functions from $\{0, \ldots, n-1\}$ to $\mathbb{C}$
 (i.e., $n$-dimensional complex vectors). The \texttt{ext} tactic proves function equality
 pointwise.
 
 \subsection{Scalar action via units}
-The unit group $\alpha^\times$ of a monoid $\alpha$ acts on $\alpha^n$ by scalar multiplication.
-
-\leancodefile[firstline=103,lastline=115,firstnumber=103]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
-
-This generalizes the complex example by abstracting over the coefficient monoid.
-
-\subsection{Dihedral group action on a square}
-Let $D_4$ be the symmetry group of a square, acting on $\mathbb{Z}/4\mathbb{Z}$.
-
-\leancodefile[firstline=139,lastline=155,firstnumber=139]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
-
-\subsection{Symmetric group S₃ acting on \{1,2,3\}}
-The symmetric group on 3 elements provides the canonical example of a transitive group action. This is the standard permutation representation of $S_3$.
-
 \leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 
-The action is transitive: for any two elements $a, b \in \{1,2,3\}$, there exists a permutation $\sigma \in S_3$ such that $\sigma(a) = b$.
+\subsection{Dihedral group action on a square}
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 
 \section{Permutation Representation}
 The core construction is the map $\sigma_g : X \to X$ given by $\sigma_g(x) = g \cdot x$.
@@ -393,14 +343,12 @@ This step may not be strictly necessary in Lean code, but we include it to align
 			\textbf{Lean code explanation.}
 
 			The function \texttt{sigma} implements this definition. It takes a group element \texttt{g} and returns a function from \texttt{X} to \texttt{X} that applies the action.
+			\leancodefile[firstline=27,lastline=30,firstnumber=27]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+			Lean requires an explicit construction of the inverse function to show that $\sigma_g$ is a permutation.
 		\end{minipage}
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=26,lastline=29,firstnumber=26]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-
-\subsubsection{Step 2: Prove $\sigma_g$ is a bijection}
-Lean requires an explicit construction of the inverse function to show that $\sigma_g$ is a permutation.
 \begin{table}[H]
 	\centering
 	\begin{tabular}[t]{p{0.47\textwidth}@{\hspace{2em}}p{0.47\textwidth}}
@@ -419,9 +367,7 @@ Lean requires an explicit construction of the inverse function to show that $\si
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=31,lastline=63,firstnumber=31]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-
-\subsubsection{Step 3: Construct the permutation representation $\phi$}
+\leancodefile[firstline=27,lastline=30,firstnumber=27]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 This step bridges the individual permutations $\sigma_g$ to a group homomorphism, constructing the representation map $\phi : G \to \mathrm{Sym}(X)$ that preserves the group structure.
 
 \begin{table}[H]
@@ -442,9 +388,7 @@ This step bridges the individual permutations $\sigma_g$ to a group homomorphism
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=69,lastline=73,firstnumber=69]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-
-\subsubsection{Step 4: Verify homomorphism properties}
+\leancodefile[firstline=27,lastline=30,firstnumber=27]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 This step establishes that $\phi$ is a group homomorphism by verifying it preserves multiplication and the identity element, completing the proof that $\phi$ is a valid group representation.
 
 \begin{table}[H]
@@ -465,9 +409,7 @@ This step establishes that $\phi$ is a group homomorphism by verifying it preser
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=78,lastline=100,firstnumber=78]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-
-\subsubsection{Step 5: Package the theorem}
+\leancodefile[firstline=27,lastline=30,firstnumber=27]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}Perm
 Now just need to combine everything into the final theorem statement.
 \begin{table}[H]
 	\centering
@@ -487,9 +429,7 @@ Now just need to combine everything into the final theorem statement.
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=103,lastline=108,firstnumber=103]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-
-\subsection{Proof sketch (informal)}
+\leancodefile[firstline=27,lastline=30,firstnumber=27]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 To show that $\sigma_g$ is a bijection, compute
 $\sigma_{g^{-1}}(\sigma_g(x)) = (g^{-1} g) \cdot x = 1 \cdot x = x$, and similarly
 $\sigma_g(\sigma_{g^{-1}}(x)) = x$. The representation is defined by
@@ -498,22 +438,9 @@ $\phi(g) = \sigma_g$, and multiplicativity follows from the action axiom:
 	\phi(g_1 g_2)(x) = (g_1 g_2) \cdot x = g_1 \cdot (g_2 \cdot x) = (\phi(g_1)\phi(g_2))(x).
 \]
 
-\subsection{Lean code}
-First, define the underlying action map:
-\leancodefile[firstline=26,lastline=29,firstnumber=26]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=27,lastline=30,firstnumber=27]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
 
-Then package it as a permutation using the inverse action:
-\leancodefile[firstline=34,lastline=64,firstnumber=34]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-Using \texttt{\#check} on \texttt{sigmaPerm} confirms it has type
-\leancodefile[firstline=65,lastline=65,firstnumber=65]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-This confirms the map $g \mapsto \sigma_g$ is a well-defined function from $G$ to $\mathrm{Sym}(X)$.
-Define the representation and its basic properties:
-\leancodefile[firstline=69,lastline=100,firstnumber=69]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-
-Finally, package the existence statement:
-\leancodefile[firstline=103,lastline=108,firstnumber=103]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}
-
-\section{Stabilizers}
+\leancodefile[firstline=27,lastline=30,firstnumber=27]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Permutation.lean}Perm
 For a fixed $x \in X$, the stabilizer is the subset
 \[
 	G_x = \{ g \in G \mid g \cdot x = x \}.
@@ -528,9 +455,7 @@ If $g$ fixes $x$, then
 $g^{-1} \cdot x = g^{-1} \cdot (g \cdot x) = (g^{-1} g) \cdot x = x$,
 so $g^{-1} \in G_x$.
 
-\subsection{Lean code}
-Start from the set definition:
-\leancodefile[firstline=24,lastline=25,firstnumber=24]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
+\leancodefile[firstline=27,lastline=53,firstnumber=27]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
 
 Package it as a subgroup by checking closure:
 % 加一段介绍 carrier one_mem mul_mem inv_mem
@@ -543,10 +468,7 @@ Define the subgroup structure by providing proofs of the subgroup axioms:
 	\item \texttt{inv\_mem'}: if $g$ fixes $x$, then so does $g^{-1}$ by combining
 	      \texttt{ga\_mul} and \texttt{ga\_one}.
 \end{itemize}
-\leancodefile[firstline=28,lastline=52,firstnumber=28]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
-
-Then show the set is the carrier of a subgroup:
-\leancodefile[firstline=55,lastline=57,firstnumber=55]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
+\leancodefile[firstline=27,lastline=53,firstnumber=27]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
 
 \iffalse
 	\section{Main Theorem}

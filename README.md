@@ -1,5 +1,54 @@
 # Project 1: Group Actions
 
+## 🚧 BRANCH: feat/lean-latex-automation
+
+**Status**: Development branch for Lean-LaTeX automation system
+**Purpose**: Implement automated maintenance of Lean code references in LaTeX documents
+**Completion**: 27/27 success criteria met, all tests passing, LaTeX compiles successfully
+
+### Branch Plan & Progress
+
+✅ **COMPLETED (27/27 success criteria)**
+- [x] Lean parser: Extract definitions, theorems, instances from .lean files
+- [x] LaTeX parser: Parse existing \leancodefile calls and TODO markers
+- [x] Intelligent matcher: Match LaTeX references to Lean definitions
+- [x] Line range calculator: Include surrounding comments in ranges
+- [x] LaTeX updater: Generate corrected \leancodefile calls
+- [x] TODO marker support: %TODO:lean-name → automatic \leancodefile insertion
+- [x] Integration & testing: Full automation pipeline working
+- [x] LaTeX compilation fixes: Resolved tabular environment errors
+
+### Key Features Implemented
+- **Dual Mode Operation**: Maintain existing references + insert from TODO markers
+- **Smart Matching**: Exact name matching + suffix matching (e.g., "faithful" → "GroupAction.faithful")
+- **Comment Inclusion**: Automatically include comments above/below definitions
+- **GitHub Integration**: Generate proper GitHub URLs for code links
+- **Error Handling**: Comprehensive validation and user-friendly error messages
+
+### Usage
+```bash
+# Analyze Lean files and LaTeX references
+python automation/lean_latex_linker.py --analyze
+
+# View matching results
+python automation/lean_latex_linker.py --match
+
+# Apply automated updates
+python automation/lean_latex_linker.py --update
+
+# Run tests
+python automation/tests/test_automation.py
+```
+
+### Files Added/Modified
+- `automation/`: Complete automation system (parser, matcher, updater, linker)
+- `tex/report.tex`: All \leancodefile calls converted to TODO markers and auto-updated
+- `README.md`: This branch documentation
+
+**Next Steps**: Merge to main after review, or continue development on this branch.
+
+---
+
 Copyright (c) 2026 Frankie Feng-Cheng WANG. All rights reserved. Repository: https://github.com/FrankieeW/formalising-mathematics-notes
 
 This folder contains a Lean 4 formalisation of basic group action theory, focusing on the permutation representation induced by an action and the stabilizer subgroup of a point.
