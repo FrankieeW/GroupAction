@@ -422,3 +422,6 @@ lake-manifest.json
 *.bak[0-9]*
 tex/out/report.bbl-SAVE-ERROR
 tex/out/report.bbf-SAVE-ERROR
+
+# LaTeX build outputs
+tex/out/

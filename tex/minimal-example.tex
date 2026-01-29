@@ -32,15 +32,7 @@
 % Usage: \leancodefile[options]{local_path}{github_url}
 \newcommand{\leancodefile}[3][]{%
   \setleancodeurl{#3}%
-  \inputminted[
-    fontsize=\footnotesize,
-    breaklines,
-    breakanywhere,
-    tabsize=2,
-    showspaces=false,
-    linenos=true,
-    #1
-  ]{lean4}{#2}%
+  \inputminted[fontsize=\footnotesize,breaklines,breakanywhere,tabsize=2,showspaces=false,linenos=true,#1]{lean4}{#2}%
 }
 
 \begin{document}
@@ -56,9 +48,9 @@ Here's the \texttt{GroupAction} class definition imported from the source file.
 Each line number is clickable and links to GitHub:
 
 \leancodefile[
-	firstline=20,
-	lastline=23,
-	firstnumber=20
+firstline=20,
+lastline=23,
+firstnumber=20
 ]{../lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Defs.lean}
 
 \textbf{Try it:} Click any line number in the code block above to jump to that line on GitHub!
@@ -76,9 +68,9 @@ Each line number is clickable and links to GitHub:
 \section{Another Example: Permutation Representation}
 
 \leancodefile[
-	firstline=66,
-	lastline=69,
-	firstnumber=66
+firstline=66,
+lastline=69,
+firstnumber=66
 ]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
 
 \end{document}
