@@ -20,6 +20,10 @@
 \newcommand{\course}[1]{\newcommand{\@course}{#1}}
 % We define the macro for the name of the institution
 \newcommand{\institute}[1]{\newcommand{\@institute}{#1}}
+% We define the macro for the email
+\newcommand{\email}[1]{\newcommand{\@email}{#1}}
+% We define the macro for the GitHub
+\newcommand{\github}[1]{\newcommand{\@github}{#1}}
 
 % These are auxiliary definitions used in the title section
 \newcommand{\@CourseLang}{Course}
@@ -27,6 +31,8 @@
 \newcommand{\@StudentLang}{Student name}
 \newcommand{\@StudentIdLang}{Student ID}
 \newcommand{\@LecturerLang}{Lecturer}
+\newcommand{\@EmailLang}{Email}
+\newcommand{\@GitHubLang}{GitHub}
 \newcommand{\@ColonLang}{: }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,6 +62,8 @@
   \renewcommand{\@DateLang}{截止日期}
   \renewcommand{\@StudentLang}{姓名}
   \renewcommand{\@StudentIdLang}{学号}
+  \renewcommand{\@EmailLang}{邮箱}
+  \renewcommand{\@GitHubLang}{GitHub}
   \renewcommand{\@ColonLang}{：}
 }
 
@@ -122,6 +130,8 @@
     \hrule \vspace{10pt}
     {\LARGE\bfseries \@title} \\ \vspace{5pt}
     \@StudentLang\@ColonLang{\itshape \@author}\ifdef{\@studentid}{\ --\ \@StudentIdLang\@ColonLang{\itshape \@studentid}}{} \\
+    \ifdef{\@email}{\@EmailLang\@ColonLang{\itshape \@email}\\}{}
+    \ifdef{\@github}{\@GitHubLang\@ColonLang{\itshape \@github}\\}{}
     \vspace{8pt} \hrule \vspace{10pt}
     \ifdef{\@course} {
       \@CourseLang\@ColonLang{\itshape \@course}\ifdef{\@lecturer}{\ --\ \@LecturerLang\@ColonLang{\itshape \@lecturer}}{} \\

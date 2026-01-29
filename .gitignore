@@ -386,4 +386,5 @@ lake-manifest.json
 *.lean.proofs
 *.lean.trace
 
-
+# TeX bakcup files .bak0 .bak1 ...
+*.bak[0-9]*
