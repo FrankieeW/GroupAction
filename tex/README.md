@@ -14,71 +14,30 @@ xelatex -shell-escape report.tex  # Run twice for cross-references
 
 Below is a minimal working example showing how to import Lean code from files with clickable line-by-line GitHub hyperlinks.
 
-### `minimal-example.tex`
+### Minimal Template: `doc/minimal-example.tex`
 
-```latex
-\documentclass{article}
-\usepackage{fontspec}
-\setmonofont{FreeMono}  % Or any monospace font
-\usepackage{hyperref}
-\usepackage{minted}
+See `doc/minimal-example.tex` for a complete, working example that demonstrates how to import Lean code from files with clickable line-by-line GitHub hyperlinks.
 
-% Configure minted for Lean 4
-\newmintinline[lean]{lean4}{bgcolor=white}
-\newminted[leancode]{lean4}{
-  fontsize=\footnotesize,
-  breaklines,
-  breakanywhere,
-  tabsize=2,
-  showspaces=false
-}
-\usemintedstyle{tango}
+**To use the template:**
 
-% Setup for GitHub URL hyperlinks
-\newcommand{\leancodeurl}{}
-\newcommand{\setleancodeurl}[1]{\renewcommand{\leancodeurl}{#1}}
-
-% Make each line number a hyperlink to GitHub
-\renewcommand{\theFancyVerbLine}{\arabic{FancyVerbLine}}
-\renewcommand{\FancyVerbFormatLine}[1]{%
-  \href{\leancodeurl\#L\arabic{FancyVerbLine}}{#1}%
-}
-
-% Command to import code from .lean files with GitHub links
-% Usage: \leancodefile[options]{local_path}{github_url}
-\newcommand{\leancodefile}[3][]{%
-  \setleancodeurl{#3}%
-  \inputminted[fontsize=\footnotesize,breaklines,breakanywhere,tabsize=2,showspaces=false,linenos=true,#1]{lean4}{#2}%
-}
-
-\begin{document}
-
-\section{Example: Importing Lean Code with GitHub Links}
-
-Here's the \texttt{GroupAction} class definition imported from the source file.
-Each line number is clickable and links to GitHub:
-
-\leancodefile[
-  firstline=20,
-  lastline=23,
-  firstnumber=20
-]{../lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Defs.lean}
-
-Click any line number to jump to that line on GitHub!
-
-\end{document}
-```
-
-### How to Use
-
-1. **Save the template** as `minimal-example.tex` in the `tex/` directory
-
+1. **Copy or edit** `doc/minimal-example.tex`
 2. **Compile with XeLaTeX** (required for `fontspec` and `minted`):
    ```bash
+   cd doc
    xelatex -shell-escape minimal-example.tex
    ```
-
 3. **Click line numbers** in the PDF to open the corresponding line on GitHub
+
+**Key features of the template:**
+- Imports code directly from `.lean` source files
+- Each line number is a clickable GitHub hyperlink
+- Configured minted for Lean 4 syntax highlighting
+- Shows how to specify line ranges and numbering
+
+**Template components:**
+- `\leancodefile` command for file import
+- GitHub URL setup with `\leancodeurl` and `\FancyVerbFormatLine`
+- Proper XeLaTeX package configuration
 
 ### Key Components
 
@@ -127,13 +86,20 @@ Click any line number to jump to that line on GitHub!
 ## Full Project Structure
 
 ```
-tex/
-├── report.tex           # Main report (uses leancodefile extensively)
-├── assignment.cls       # Custom LaTeX class
-├── references.bib       # Bibliography
-├── figures/             # Images and diagrams
-├── out/                 # Build artifacts (gitignored)
-└── README.md           # This file
+├── doc/
+│   ├── minimal-example.tex      # Working template for code import with GitHub links
+│   └── minimal-example.pdf   # Compiled example (clickable links)
+├── lean/                    # Lean source files
+│   └── GroupAction/         # Main Lean modules
+├── tex/
+│   ├── report.tex           # Main report (uses leancodefile extensively)
+│   ├── assignment.cls       # Custom LaTeX class
+│   ├── references.bib       # Bibliography
+│   ├── figures/             # Images and diagrams
+│   ├── out/                 # Build artifacts (gitignored)
+│   └── README.md           # This file
+├── doc/                    # Documentation and templates
+└── AGENTS.md               # Tex knowledge base
 ```
 
 ## Advanced Usage
@@ -172,6 +138,12 @@ tex/
 - [Minted documentation](https://ctan.org/pkg/minted)
 - [Hyperref documentation](https://ctan.org/pkg/hyperref)
 - [Fontspec documentation](https://ctan.org/pkg/fontspec)
+
+## Related Templates
+
+- **`doc/minimal-example.tex`** - Complete working template
+- **`doc/minimal-example.pdf`** - Compiled example with clickable GitHub links
+- **`AGENTS.md`** - Tex knowledge base for automated assistance
 
 ## License
 
