@@ -371,7 +371,39 @@ Temporary Items
 # AI artifacts
 .sisyphus/
 AGENTS.md
-
+.agent/
+.agents/
+.claude/
+.cline/
+.codebuddy/
+.codex/
+.commandcode/
+.continue/
+.crush/
+.cursor/
+.factory/
+.gemini/
+.goose/
+.junie/
+.kilocode/
+.kiro/
+.kode/
+.lake/
+.mcpjam/
+.mux/
+.neovate/
+.opencode/
+.openhands/
+.pi/
+.pochi/
+.qoder/
+.qwen/
+.roo/
+.trae/
+.vscode/
+.windsurf/
+.zencoder/
+.github/
 
 # Lean build artifacts
 .lake/
