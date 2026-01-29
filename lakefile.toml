@@ -1,0 +1,17 @@
+name = "GroupAction"
+defaultTargets = ["GroupAction"]
+
+[leanOptions]
+pp.unicode.fun = true
+autoImplicit = false
+relaxedAutoImplicit = false
+linter.style.longLine = true
+
+[[require]]
+name = "mathlib"
+rev = "v4.27.0"
+git = "https://github.com/leanprover-community/mathlib4.git"
+
+[[lean_lib]]
+name = "GroupAction"
+srcDir = "lean"
