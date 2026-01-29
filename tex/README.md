@@ -48,15 +48,7 @@ Below is a minimal working example showing how to import Lean code from files wi
 % Usage: \leancodefile[options]{local_path}{github_url}
 \newcommand{\leancodefile}[3][]{%
   \setleancodeurl{#3}%
-  \inputminted[
-    fontsize=\footnotesize,
-    breaklines,
-    breakanywhere,
-    tabsize=2,
-    showspaces=false,
-    linenos=true,
-    #1
-  ]{lean4}{#2}%
+  \inputminted[fontsize=\footnotesize,breaklines,breakanywhere,tabsize=2,showspaces=false,linenos=true,#1]{lean4}{#2}%
 }
 
 \begin{document}
