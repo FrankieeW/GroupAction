@@ -1,0 +1,84 @@
+% Minimal working example: Lean code with GitHub hyperlinks
+% Compile with: xelatex -shell-escape minimal-example.tex
+
+\documentclass{article}
+\usepackage{fontspec}
+\setmonofont{FreeMono}  % Or any monospace font
+\usepackage{hyperref}
+\usepackage{minted}
+
+% Configure minted for Lean 4
+\newmintinline[lean]{lean4}{bgcolor=white}
+\newminted[leancode]{lean4}{
+  fontsize=\footnotesize,
+  breaklines,
+  breakanywhere,
+  tabsize=2,
+  showspaces=false
+}
+\usemintedstyle{tango}
+
+% Setup for GitHub URL hyperlinks
+\newcommand{\leancodeurl}{}
+\newcommand{\setleancodeurl}[1]{\renewcommand{\leancodeurl}{#1}}
+
+% Make each line number a hyperlink to GitHub
+\renewcommand{\theFancyVerbLine}{\arabic{FancyVerbLine}}
+\renewcommand{\FancyVerbFormatLine}[1]{%
+  \href{\leancodeurl\#L\arabic{FancyVerbLine}}{#1}%
+}
+
+% Command to import code from .lean files with GitHub links
+% Usage: \leancodefile[options]{local_path}{github_url}
+\newcommand{\leancodefile}[3][]{%
+  \setleancodeurl{#3}%
+  \inputminted[
+    fontsize=\footnotesize,
+    breaklines,
+    breakanywhere,
+    tabsize=2,
+    showspaces=false,
+    linenos=true,
+    #1
+  ]{lean4}{#2}%
+}
+
+\begin{document}
+
+\title{Minimal Example: Code Import with GitHub Hyperlinks}
+\author{Template Example}
+\date{\today}
+\maketitle
+
+\section{Example: Importing Lean Code with GitHub Links}
+
+Here's the \texttt{GroupAction} class definition imported from the source file.
+Each line number is clickable and links to GitHub:
+
+\leancodefile[
+	firstline=20,
+	lastline=23,
+	firstnumber=20
+]{../lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Defs.lean}
+
+\textbf{Try it:} Click any line number in the code block above to jump to that line on GitHub!
+
+\section{How It Works}
+
+\begin{enumerate}
+	\item \texttt{\textbackslash leancodefile} imports code from a local \texttt{.lean} file
+	\item \texttt{firstline/lastline} specify which lines to extract
+	\item \texttt{firstnumber} sets the displayed line numbering
+	\item Each line is wrapped in \texttt{\textbackslash href} linking to GitHub
+	\item The GitHub URL is constructed as: \texttt{base\_url\#LN} where N is the line number
+\end{enumerate}
+
+\section{Another Example: Permutation Representation}
+
+\leancodefile[
+	firstline=66,
+	lastline=69,
+	firstnumber=66
+]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.0.0/lean/GroupAction/Permutation.lean}
+
+\end{document}
