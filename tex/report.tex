@@ -34,6 +34,10 @@
   % Chinese, % Uncomment for Chinese document
 ]{assignment}
 
+% Set table of contents depth to section level only (no subsection, subsubsection)
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2} % Still number sections up to subsubsection, just don't show in TOC
+
 \usepackage{amsthm} % For proof environment
 \newtheorem{lemma}{Lemma} % define lemma environment
 
@@ -292,7 +296,7 @@ permutation by branching on whether two elements are equal, which needs decidabl
 \subsection{Group acting on itself by left multiplication}
 Every group $G$ acts on itself by left multiplication: $g_1 \cdot g_2 := g_1 * g_2$.
 
-\leancodefile[firstline=44,lastline=51,firstnumber=44]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=46,lastline=54,firstnumber=46]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
 
 The \texttt{ga\_mul} axiom follows from associativity of group multiplication, and
 \texttt{ga\_one} from the identity axiom.
@@ -301,14 +305,14 @@ The \texttt{ga\_mul} axiom follows from associativity of group multiplication, a
 A subgroup $H \leq G$ acts on $G$ by left multiplication. Elements of $H$ are coerced
 to elements of $G$ using \texttt{(h : G)}.
 
-\leancodefile[firstline=55,lastline=64,firstnumber=55]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=58,lastline=66,firstnumber=58]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
 
 The \texttt{simp} tactic handles the coercion and applies associativity and identity axioms.
 
 \subsection{Conjugation action of a subgroup on itself}
 A subgroup $H$ acts on itself by conjugation: $h_1 \cdot h_2 := h_1 h_2 h_1^{-1}$.
 
-\leancodefile[firstline=66,lastline=84,firstnumber=66]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=68,lastline=79,firstnumber=68]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
 % mul_assoc.{u_1} {G : Type u_1} [Semigroup G] (a b c : G) : a * b * c = a * (b * c)
 The \texttt{mul\_assoc} lemma is from mathlib and states associativity of multiplication:
 
@@ -330,32 +334,32 @@ In detail, it will rewrite the left hand side \texttt{$g_1$ * ($g_2$ * $g_3$ * $
 The multiplicative group $\mathbb{C}^\times$ of nonzero complex numbers acts on
 $\mathbb{C}^n$ by scalar multiplication.
 
-\leancodefile[firstline=88,lastline=98,firstnumber=88]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=83,lastline=95,firstnumber=83]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
 
 Here \texttt{ℂˣ} denotes the units of $\mathbb{C}$ (invertible elements), and
 \texttt{Fin n → ℂ} represents functions from $\{0, \ldots, n-1\}$ to $\mathbb{C}$
 (i.e., $n$-dimensional complex vectors). The \texttt{ext} tactic proves function equality
 pointwise.
+\iffalse % The reprot is too long
+	\subsection{Scalar action via units}
+	The unit group $\alpha^\times$ of a monoid $\alpha$ acts on $\alpha^n$ by scalar multiplication.
 
-\subsection{Scalar action via units}
-The unit group $\alpha^\times$ of a monoid $\alpha$ acts on $\alpha^n$ by scalar multiplication.
+	\leancodefile[firstline=103,lastline=115,firstnumber=103]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
 
-\leancodefile[firstline=103,lastline=115,firstnumber=103]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
-
-This generalizes the complex example by abstracting over the coefficient monoid.
-
+	This generalizes the complex example by abstracting over the coefficient monoid.
+\fi
 \subsection{Dihedral group action on a square}
 Let $D_4$ be the symmetry group of a square, acting on $\mathbb{Z}/4\mathbb{Z}$.
 
-\leancodefile[firstline=139,lastline=155,firstnumber=139]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
+\leancodefile[firstline=130,lastline=170,firstnumber=130]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
+\iffalse % The report is too long
+	\subsection{Symmetric group $S_3$ acting on \{1,2,3\}}
+	The symmetric group on 3 elements provides the canonical example of a transitive group action. This is the standard permutation representation of $S_3$.
 
-\subsection{Symmetric group $S_3$ acting on \{1,2,3\}}
-The symmetric group on 3 elements provides the canonical example of a transitive group action. This is the standard permutation representation of $S_3$.
+	\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
 
-\leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Examples.lean}
-
-The action is transitive: for any two elements $a, b \in \{1,2,3\}$, there exists a permutation $\sigma \in S_3$ such that $\sigma(a) = b$.
-
+	The action is transitive: for any two elements $a, b \in \{1,2,3\}$, there exists a permutation $\sigma \in S_3$ such that $\sigma(a) = b$.
+\fi
 \section{Permutation Representation}
 The core construction is the map $\sigma_g : X \to X$ given by $\sigma_g(x) = g \cdot x$.
 The inverse of $\sigma_g$ is $\sigma_{g^{-1}}$, so $\sigma_g$ is a permutation.
@@ -396,7 +400,7 @@ This step may not be strictly necessary in Lean code, but we include it to align
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=26,lastline=29,firstnumber=26]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=27,lastline=30,firstnumber=27]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
 
 \subsubsection{Step 2: Prove $\sigma_g$ is a bijection}
 Lean requires an explicit construction of the inverse function to show that $\sigma_g$ is a permutation.
@@ -418,7 +422,7 @@ Lean requires an explicit construction of the inverse function to show that $\si
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=31,lastline=63,firstnumber=31]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=32,lastline=65,firstnumber=32]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
 
 \subsubsection{Step 3: Construct the permutation representation $\phi$}
 This step bridges the individual permutations $\sigma_g$ to a group homomorphism, constructing the representation map $\phi : G \to \mathrm{Sym}(X)$ that preserves the group structure.
@@ -441,7 +445,7 @@ This step bridges the individual permutations $\sigma_g$ to a group homomorphism
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=69,lastline=73,firstnumber=69]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=67,lastline=73,firstnumber=67]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
 
 \subsubsection{Step 4: Verify homomorphism properties}
 This step establishes that $\phi$ is a group homomorphism by verifying it preserves multiplication and the identity element, completing the proof that $\phi$ is a valid group representation.
@@ -464,7 +468,7 @@ This step establishes that $\phi$ is a group homomorphism by verifying it preser
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=78,lastline=100,firstnumber=78]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=79,lastline=100,firstnumber=79]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
 
 \subsubsection{Step 5: Package the theorem}
 Now just need to combine everything into the final theorem statement.
@@ -486,7 +490,7 @@ Now just need to combine everything into the final theorem statement.
 	\end{tabular}
 \end{table}
 
-\leancodefile[firstline=103,lastline=108,firstnumber=103]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
+\leancodefile[firstline=102,lastline=114,firstnumber=102]{../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.2.0/lean/GroupAction/Permutation.lean}
 
 \subsection{Proof sketch (informal)}
 To show that $\sigma_g$ is a bijection, compute
@@ -601,7 +605,12 @@ Several technical hurdles emerged during the formalization:
 	      and equality of vector-valued functions required \texttt{ext i}, which were not immediately obvious.
 	\item \textbf{Decidable equality:} Some examples (like the symmetric group action) required
 	      \texttt{DecidableEq} instances to construct certain permutations, which added complexity.
-	      %这对我来说不是一个自然的概念
+	      % \item I tried to add `mul_assoc` to `simp` because my proof used `simp [mul_assoc]` many times, but I later realised that `simp` does not include `mul_assoc` by design: changing the order of multiplication does not constitute a genuine simplification, since associativity merely rearranges the expression rather than making it simpler.
+	\item \textbf{mul\_assoc usage:} I initially attempted to add \texttt{mul\_assoc} to the \texttt{simp} set
+	      because I used \texttt{simp [mul\_assoc]} frequently. However, I later realized that \texttt{simp}
+	      does not include \texttt{mul\_assoc} by design: changing the order of multiplication does not
+	      constitute a genuine simplification, since associativity merely rearranges the expression rather
+	      than making it simpler.
 \end{itemize}
 % 代码规范性上的
 \subsection{Specific challenges encountered about code structure and style}
@@ -674,6 +683,7 @@ Addison-Wesley, 2003, Section 16 (Group Actions).
 \part{Appendix}
 \section{AI Assistance Statement}
 I used AI-assisted tools in a limited and strictly auxiliary manner. Specifically, AI was used to help automate the conversion of Lean source files into \LaTeX\ code blocks for inclusion in this report, and to assist with reorganising a single Lean file into multiple smaller files during the development process. In addition, AI was occasionally used for high-level brainstorming about structure and presentation.
+Additionally, C. Project Configuration and Build Instructions is generated with AI.
 
 All mathematical content, Lean definitions, proofs, and formal statements were written, checked, and verified by me. AI tools were not used to replace mathematical reasoning or to generate unverified results. I take full responsibility for the correctness and originality of both the Lean code and the written exposition.
 
@@ -744,36 +754,24 @@ linter.unusedArguments = true  # Check for unused arguments
 linter.deadCode = true         # Check for dead code
 \end{verbatim}
 
-\subsection{Build Commands}
-\begin{verbatim}
-# Setup (first time)
-lake exe cache get            # Download mathlib cache (~30s)
+% \subsection{Build Commands}
+% \begin{verbatim}
+% # Setup (first time)
+% lake exe cache get            # Download mathlib cache (~30s)
 
-# Build commands
-lake build                     # Full project build
-lake env lean -- lake build    # Build with explicit Lean environment
+% # Build commands
+% lake build                     # Full project build
+% lake env lean -- lake build    # Build with explicit Lean environment
 
-# Test commands
-lake env lean lean/GroupAction/Examples.lean
-lake env lean lean/GroupAction/Defs.lean
-lake env lean lean/GroupAction/Basic.lean
-lake env lean lean/GroupAction/Permutation.lean
-lake env lean lean/GroupAction/Stabilizer.lean
-lake env lean lean/GroupAction.lean
-\end{verbatim}
+% # Test commands
+% lake env lean lean/GroupAction/Examples.lean
+% lake env lean lean/GroupAction/Defs.lean
+% lake env lean lean/GroupAction/Basic.lean
+% lake env lean lean/GroupAction/Permutation.lean
+% lake env lean lean/GroupAction/Stabilizer.lean
+% lake env lean lean/GroupAction.lean
+% \end{verbatim}
 
-% \subsection{Code Style Guidelines}
-% \begin{itemize}
-% 	\item \textbf{File Structure}: Every file starts with a header block comment
-% 	\item \textbf{Imports}: All imports at top of file, before any code
-% 	\item \textbf{Sections}: Use \texttt{/-! ## Section Name -/} for major sections
-% 	\item \textbf{Spacing}: Two-space indentation throughout
-% 	\item \textbf{Naming}: Definitions/lemmas use \texttt{snake\_case} (e.g., \texttt{ga\_mul}, \texttt{phi\_mul})
-% 	\item \textbf{Hypotheses}: Use \texttt{h} prefix (e.g., \texttt{hg₁}, \texttt{hx})
-% 	\item \textbf{Proof Style}: Readable tactics (\texttt{intro}, \texttt{apply}, \texttt{simp}, \texttt{rw}, \texttt{calc})
-% 	\item \textbf{Type Annotations}: Explicit types when clarity requires
-% 	\item \textbf{Documentation}: Use \texttt{/-! Brief description -/} for definitions and theorems
-% \end{itemize}
 
 \subsection{Dependencies}
 \begin{itemize}
@@ -781,15 +779,6 @@ lake env lean lean/GroupAction.lean
 	\item \textbf{mathlib}: Version 4.27.0 (via Lake)
 	\item \textbf{LaTeX}: XeLaTeX with \texttt{minted} package for code highlighting
 \end{itemize}
-
-\subsection{Development Workflow}
-\begin{enumerate}
-	\item \textbf{Write code} in appropriate module (\texttt{Defs.lean}, \texttt{Basic.lean}, etc.)
-	\item \textbf{Add \#check} statements in \texttt{Examples.lean} for verification
-	\item \textbf{Test} with \texttt{lake env lean <file>}
-	\item \textbf{Build} full project with \texttt{lake build}
-	\item \textbf{Document} changes following commit rules in \texttt{doc/COMMIT\_RULES.md}
-\end{enumerate}
 
 
 
