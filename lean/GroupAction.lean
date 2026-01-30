@@ -24,3 +24,5 @@ such as multiplicativity and the stabilizer subgroup.
 John B. Fraleigh, Victor J. Katz, *A First Course in Abstract Algebra*,
 Addison–Wesley, 2003, Section 16 (Group Actions).
 -/
+
+#lint

@@ -24,3 +24,5 @@ theorem transitive_def {G : Type*} [Group G] {X : Type*} [GroupAction G X] :
     GroupAction.transitive (G := G) (X := X) ↔
       ∀ x₁ x₂ : X, ∃ g : G, GroupAction.act g x₁ = x₂ :=
   Iff.rfl
+
+#lint

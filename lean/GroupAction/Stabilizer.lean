@@ -7,6 +7,7 @@ Copyright (c) 2026 Frankie Feng-Cheng WANG. All rights reserved.
 Repository: https://github.com/FrankieeW/
 -/
 import GroupAction.Defs
+import Mathlib.Algebra.Group.Subgroup.Basic
 
 /-!
 # Stabilizer (isotropy subgroup)
@@ -54,4 +55,7 @@ def stabilizer (x : X) : Subgroup G := by
 /-- The stabilizer set is the carrier of a subgroup of `G`. -/
 theorem stabilizer_set_is_subgroup (x : X) :
     ∃ H : Subgroup G, (H : Set G) = stabilizerSet (G := G) (X := X) x := by
-  refine ⟨stabilizer (G := G) (X := X) x, rfl⟩
+  refine ⟨stabilizer (G := G) (X := X) x, ?_⟩
+  rfl
+
+#lint

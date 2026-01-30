@@ -126,3 +126,5 @@ theorem group_action_to_perm_representation_apply
   φ g x = GroupAction.act g x :=
   -- By definition of hφ.
   hφ g x
+  
+#lint
