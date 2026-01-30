@@ -407,7 +407,7 @@ AGENTS.md
 
 # Lean build artifacts
 .lake/
-lake-manifest.json
+# lake-manifest.json
 *.olean
 *.ilean
 *.c
@@ -425,3 +425,6 @@ tex/out/report.bbf-SAVE-ERROR
 
 # LaTeX build outputs
 tex/out/
+
+#.bin/
+.bin/
