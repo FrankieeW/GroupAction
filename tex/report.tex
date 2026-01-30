@@ -99,6 +99,7 @@
 
 %----------------------------------------------------------------------------------------
 \begin{document}
+\setcounter{tocdepth}{3}
 \maketitle % Output the assignment title, created automatically using the information in the custom commands above
 \tableofcontents
 
@@ -121,7 +122,7 @@ The development is organised around three closely related components:
 
 The mathematical development and theorem numbering follow
 Fraleigh and Katz, \textit{A First Course in Abstract Algebra},
-Addison--Wesley, 2003, Section~16 (Group Actions).
+Addison-Wesley, 2003, Section~16 (Group Actions).
 
 The complete Lean source code is available on GitHub:
 \begin{center}
@@ -169,7 +170,7 @@ later sections.
 \end{quote}
 
 
-\iffalse
+\iffalse%
 	\section{Background and Design Choices}
 	\subsection{Why a custom action class}
 	Mathlib already provides \texttt{MulAction}, but I define a small custom class
@@ -188,10 +189,8 @@ later sections.
 
 \section{Definitions}
 This section introduces the group action class and the definitions of faithful and transitive actions.
-\subsection{Group Action}
+\subsection{Group Action}\label{sec:group-action-definition}%
 Now, we present the definition of a group action both mathematically and in Lean.
-\label{sec:group-action-definition}
-
 \begin{table}[H]
 	\centering
 	\begin{tabular}[t]{p{0.47\textwidth}@{\hspace{2em}}p{0.47\textwidth}}
@@ -324,9 +323,9 @@ The \texttt{ga\_mul} proof can easily be done by \texttt{simp [mul\_assoc]}, but
 
 
 
-For example the \texttt{rw [← mul\_assoc g₁]} will aotumatically find the passible situation looks like \texttt{g₁* (b * c)}, because we only give one argument \texttt{g₁} to \texttt{← mul\_assoc}.
-% g₁ * (g₂ * g₃ * g₂⁻¹)-> g₁ * (g₂ * g₃) * g₂⁻¹
-In detail, it will rewrite the left hand side \texttt{g₁ * (g₂ * g₃ * g₂⁻¹)} to \texttt{g₁ * (g₂ * g₃) * g₂⁻¹} according to the right to left direction of the lemma \texttt{mul\_assoc}.
+For example the \texttt{rw [← mul\_assoc $g_1$]} will aotumatically find the passible situation looks like \texttt{$g_1$* (b * c)}, because we only give one argument \texttt{$g_1$} to \texttt{← mul\_assoc}.
+% $g_1 * (g_2 * g_3 * g_2^{-1})$ -> $g_1 * (g_2 * g_3) * g_2^{-1}$
+In detail, it will rewrite the left hand side \texttt{$g_1$ * ($g_2$ * $g_3$ * $g_2^{-1}$)} to \texttt{$g_1$ * ($g_2$ * $g_3$) * $g_2^{-1}$} according to the right to left direction of the lemma \texttt{mul\_assoc}.
 \subsection{Scalar action on complex vector spaces}
 The multiplicative group $\mathbb{C}^\times$ of nonzero complex numbers acts on
 $\mathbb{C}^n$ by scalar multiplication.
@@ -350,7 +349,7 @@ Let $D_4$ be the symmetry group of a square, acting on $\mathbb{Z}/4\mathbb{Z}$.
 
 \leancodefile[firstline=139,lastline=155,firstnumber=139]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
 
-\subsection{Symmetric group S₃ acting on \{1,2,3\}}
+\subsection{Symmetric group $S_3$ acting on \{1,2,3\}}
 The symmetric group on 3 elements provides the canonical example of a transitive group action. This is the standard permutation representation of $S_3$.
 
 \leancodefile[firstline=173,lastline=180,firstnumber=173]{../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Examples.lean}
@@ -414,7 +413,7 @@ Lean requires an explicit construction of the inverse function to show that $\si
 		\begin{minipage}[t]{0.47\textwidth}
 			\textbf{Lean code explanation.}
 
-			The \texttt{sigmaPerm} definition constructs a permutation by providing both the forward function (\texttt{toFun := sigma g}) and its inverse (\texttt{invFun := sigma g⁻¹}). The proofs of \texttt{left\_inv} and \texttt{right\_inv} verify the two-sided inverse properties using the action axioms.
+			The \texttt{sigmaPerm} definition constructs a permutation by providing both the forward function (\texttt{toFun := sigma g}) and its inverse (\texttt{invFun := sigma $g^{-1}$}). The proofs of \texttt{left\_inv} and \texttt{right\_inv} verify the two-sided inverse properties using the action axioms.
 		\end{minipage}
 	\end{tabular}
 \end{table}
@@ -548,7 +547,7 @@ Define the subgroup structure by providing proofs of the subgroup axioms:
 Then show the set is the carrier of a subgroup:
 \leancodefile[firstline=55,lastline=57,firstnumber=55]{../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/v1.1.0/lean/GroupAction/Stabilizer.lean}
 
-\iffalse
+\iffalse%
 	\section{Main Theorem}
 	The Lean theorem \texttt{group\_action\_to\_perm\_representation} packages the permutation
 	representation together with its key properties. The proof uses the lemmas from the
@@ -588,7 +587,7 @@ An external examiner can read the surrounding explanations and then see that eac
 Lean line matches a specific mathematical claim.
 
 
-\subsection{Specific challenges encountered}
+\subsection{Specific challenges encountered about formalization}
 Several technical hurdles emerged during the formalization:
 \begin{itemize}
 	\item \textbf{Typeclass resolution:} Ensuring Lean could automatically find the \texttt{GroupAction}
@@ -600,8 +599,29 @@ Several technical hurdles emerged during the formalization:
 	      of type \texttt{H} (a subgroup) to type \texttt{G} (the ambient group) using \texttt{(h : G)}.
 	\item \textbf{Function extensionality:} Proving equality of permutations required \texttt{Equiv.ext},
 	      and equality of vector-valued functions required \texttt{ext i}, which were not immediately obvious.
+  \item \textbf{Decidable equality:} Some examples (like the symmetric group action) required
+        \texttt{DecidableEq} instances to construct certain permutations, which added complexity.
+        %这对我来说不是一个自然的概念
 \end{itemize}
-\iffalse
+% 代码规范性上的
+\subsection{Specific challenges encountered about code structure and style}
+During the development, I faced several challenges related to code structure and style:
+\begin{itemize}
+  \item \textbf{Modularization:} Deciding how to split the code into multiple files (e.g., \texttt{Defs.lean},
+        \texttt{Examples.lean}, \texttt{Permutation.lean}, \texttt{Stabilizer.lean}) required careful
+        consideration of dependencies and logical flow.
+  \item \textbf{Naming conventions:} Choosing clear and consistent names for definitions,
+        lemmas, and instances was crucial for readability but sometimes challenging.
+  \item \textbf{Documentation:} Balancing inline comments with external documentation to ensure
+        that both the code and the report were understandable without redundancy.
+  \item \textbf{Tactic selection:} Deciding when to use high-level tactics like \texttt{simp} versus
+        more explicit steps with \texttt{rw} and \texttt{calc} for clarity.
+\end{itemize}
+% 还有选题高级过于简单 没有用很多 rintro 等高级tactic
+\section{Conclusion}
+This formalization establishes the foundational concepts of group actions in Lean,
+including the permutation representation and stabilizers.
+\iffalse%
 	\subsection{Potential extensions}
 	This development could be extended in several directions:
 	\begin{itemize}
@@ -613,7 +633,8 @@ Several technical hurdles emerged during the formalization:
 		\item \textbf{Cayley's theorem:} Specialize the permutation representation to the case where
 		      $G$ acts on itself, proving every group embeds in a symmetric group.
 	\end{itemize}
-\fi
+
+
 \section{Relation to Mathlib's \texttt{MulAction}}
 Mathlib's \texttt{MulAction} class provides a general framework for monoid actions, which is mathematically equivalent to our \texttt{GroupAction} class. The key differences are philosophical and structural rather than mathematical:
 
@@ -628,14 +649,22 @@ Mathlib's \texttt{MulAction} class provides a general framework for monoid actio
 \end{itemize}
 
 This custom class serves as a foundation for group theory development while remaining compatible with Mathlib's ecosystem.
+\fi
 
 \section{Future Extensions}
 This formalization provides a foundation for further development in group action theory. Potential extensions include: the orbit-stabilizer theorem relating the size of orbits to cosets of stabilizers; Burnside's lemma for counting group elements with fixed points; group actions on cosets, leading to the concept of permutation representations; and applications to representation theory and algebraic topology.
+\section{References}
+John B. Fraleigh, Victor J. Katz, \textit{A First Course in Abstract Algebra},
+Addison-Wesley, 2003, Section 16 (Group Actions).
 
+\appendix
+\part{Appendix}
 \section{AI Assistance Statement}
 I used AI-assisted tools in a limited and strictly auxiliary manner. Specifically, AI was used to help automate the conversion of Lean source files into \LaTeX\ code blocks for inclusion in this report, and to assist with reorganising a single Lean file into multiple smaller files during the development process. In addition, AI was occasionally used for high-level brainstorming about structure and presentation.
 
 All mathematical content, Lean definitions, proofs, and formal statements were written, checked, and verified by me. AI tools were not used to replace mathematical reasoning or to generate unverified results. I take full responsibility for the correctness and originality of both the Lean code and the written exposition.
+
+
 
 \section{Lean Tactics Glossary}
 This section provides a brief explanation of the key Lean tactics used in the proofs throughout this formalization.
@@ -662,8 +691,5 @@ This section provides a brief explanation of the key Lean tactics used in the pr
 
 These tactics form the core toolkit for interactive theorem proving in Lean. Each tactic has precise semantics and helps build formal proofs step by step.
 
-\section{References}
-John B. Fraleigh, Victor J. Katz, \textit{A First Course in Abstract Algebra},
-Addison--Wesley, 2003, Section 16 (Group Actions).
 
 \end{document}
