@@ -1,0 +1,370 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Imperial College London Presentation
+% LaTeX Template
+% Version 1.0 (April 16, 2024)
+%
+% This template was created by:
+% Vel (enquiries@latextypesetting.com)
+% LaTeXTypesetting.com
+%
+%!TEX program = xelatex
+% Note: this template must be compiled with XeLaTeX rather than PDFLaTeX
+% due to the custom fonts used. The line above should ensure this happens
+% automatically, but if it doesn't, your LaTeX editor should have a simple toggle
+% to switch to using XeLaTeX.
+%
+% © Imperial College London, 2024. This template, including logo and fonts, is
+% for use of Imperial staff and students only for university business. All rights
+% reserved to the copyright owners.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	CLASS, PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	aspectratio=169, % Uncomment to use an aspect ratio of 16:9 (160 mm by 90 mm)
+	%aspectratio=43, % Uncomment to use an aspect ratio of 4:3 (128mm by 96mm)
+	t, % Top align all slide content by default
+	onlytextwidth, % Typeset content in columns at text width
+	10pt, % Default font size, use 10pt for the 16:9 aspect ratio and 8pt for the 4:3 aspect ratio
+]{beamer}
+
+\usetheme{Imperial} % Use the Imperial theme
+
+\RequirePackage{minted}
+\RequirePackage{hyperref}
+\usemintedstyle{tango}
+
+% Define leancode environments with FreeMono font
+\newmintinline[lean]{lean4}{fontfamily=FreeMono,bgcolor=white}
+\newminted[leancode]{lean4}{fontfamily=FreeMono,breaklines,breakanywhere,tabsize=4,showspaces=false,linenos=true}
+
+\newcommand{\leancodeurl}{}
+\newcommand{\setleancodeurl}[1]{\renewcommand{\leancodeurl}{#1}}
+\renewcommand{\theFancyVerbLine}{\arabic{FancyVerbLine}}
+\renewcommand{\FancyVerbFormatLine}[1]{\href{\leancodeurl\#L\arabic{FancyVerbLine}}{#1}}
+
+% Import code from file with GitHub links
+\newcommand{\leancodefile}[3][]{%
+    \setleancodeurl{#3}%
+    \inputminted[fontfamily=FreeMono,breaklines,breakanywhere,tabsize=4,showspaces=false,linenos=true,#1]{lean4}{#2}%
+}
+
+% Enable navigation symbols (override theme's disable)
+\setbeamertemplate{navigation symbols}{}
+
+% Add section navigation at top
+\setbeamertemplate{headline}{\usebeamercolor[bg]{section in head/foot}\insertsectionnavigationhorizontal{\paperwidth}{}{}}
+
+%----------------------------------------------------------------------------------------
+%	IMPERIAL BEAMER THEME USAGE NOTES
+%----------------------------------------------------------------------------------------
+
+% This theme features several predefined Imperial colors which can be used for text and slide backgrounds:
+% ICLBlue - Most common slide background color and text color to use (on light backgrounds)
+% ICLDarkBlue - Optional darker blue color for slide backgrounds and text
+% ICLCream - Accessible background color for use on slide backgrounds
+% ICLLightGrey - Accessible background color for use on slide backgrounds
+
+% You can choose to use a 16:9 aspect ratio (default) or a 4:3 aspect ratio by uncommenting the relevant line in the \documentclass specifications above. Note that if you switch between the 2 aspect ratios, you will likely need to adjust how your images are included in the presentation. Usually for a 16:9 aspect ratio, images will be included as width=\paperwidth, but for a 4:3 aspect ratio it's recommended to use height=\paperheight instead.
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Group Action} % Presentation title to appear on the title slide and left footers
+
+\subtitle{Subheading} % Presentation subtitle to appear on the title slide
+
+\author{Frankie Wang} % Author name(s) to appear on the title slide
+
+\institute{Imperial College London} % Author Institutions (s)
+
+\date{03/02/2026} % Presentation date to appear on the title slide and right footers
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SLIDES
+%----------------------------------------------------------------------------------------
+
+% Select one of the 3 title slide types below and remove or comment out the others
+
+%------------------------------------------------
+
+% Blue background title slide example
+
+\begingroup
+\setbeamercolor{background canvas}{bg=ICLBlue} % Slide background color
+\setbeamercolor{title page title}{fg=white} % Title text color
+\setbeamercolor{title page subtitle}{fg=white} % Subtitle text color
+\setbeamercolor{author}{fg=white} % Author(s) text color
+\setbeamercolor{inst}{fg=white} % Author(s) Institution text color
+\setbeamercolor{date}{fg=white} % Date text color
+\setbeamertemplate{title page}[logo]{ICL_Logo_White.pdf} % Imperial logo color, use 'ICL_Logo_White.pdf' for white and 'ICL_Logo_Blue.pdf' for blue
+\frame[plain, s]{\titlepage} % Output the title page with no footer ('plain') and vertically distributed text ('s')
+\endgroup
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{Contents}
+
+\begingroup
+\setbeamercolor{normal text}{fg=ICLBlue}\usebeamercolor[fg]{normal text}
+
+\begin{frame}
+	\Large\textbf{Contents}\\[0.5cm]
+
+	\begin{enumerate}
+		\item \textbf{Group Action Definition}\\[0.2cm]
+		\item \textbf{Faithful and Transitive Actions}\\[0.2cm]
+		\item \textbf{Permutation Representation}\\[0.2cm]
+		\item \textbf{Stabilizer Subgroup}\\[0.2cm]
+		\item \textbf{Examples (S₃, D₄)}
+	\end{enumerate}
+\end{frame}
+\endgroup
+
+%----------------------------------------------------------------------------------------
+\iffalse
+	%------------------------------------------------
+
+	% White background title slide example
+
+	\begingroup
+	\setbeamercolor{title page title}{fg=ICLBlue} % Title text color
+	\setbeamercolor{title page subtitle}{fg=ICLBlue} % Subtitle text color
+	\setbeamercolor{author}{fg=ICLBlue} % Author(s) text color
+	\setbeamercolor{inst}{fg=ICLBlue} % Author(s) Institutions text color
+	\setbeamercolor{date}{fg=ICLBlue} % Date text color
+	\setbeamertemplate{title page}[logo]{ICL_Logo_Blue.pdf} % Imperial logo color, use 'ICL_Logo_White.pdf' for white and 'ICL_Logo_Blue.pdf' for blue
+	\frame[plain, s]{\titlepage} % Output the title page with no footer ('plain') and vertically distributed text ('s')
+	\endgroup
+
+	%------------------------------------------------
+
+	% Cream background title slide example
+
+	\begingroup
+	\setbeamercolor{background canvas}{bg=ICLCream} % Slide background color
+	\setbeamercolor{title page title}{fg=ICLBlue} % Title text color
+	\setbeamercolor{title page subtitle}{fg=ICLBlue} % Subtitle text color
+	\setbeamercolor{author}{fg=ICLBlue} % Author(s) text color
+	\setbeamercolor{inst}{fg=ICLBlue} % Author(s) Institutions text color
+	\setbeamercolor{date}{fg=ICLBlue} % Date text color
+	\setbeamertemplate{title page}[logo]{ICL_Logo_Blue.pdf} % Imperial logo color, use 'ICL_Logo_White.pdf' for white and 'ICL_Logo_Blue.pdf' for blue
+	\frame[plain, s]{\titlepage} % Output the title page with no footer ('plain') and vertically distributed text ('s')
+	\endgroup
+
+	%------------------------------------------------
+
+	% Light grey background title slide example
+
+	\begingroup
+	\setbeamercolor{background canvas}{bg=ICLLightGrey} % Slide background color
+	\setbeamercolor{title page title}{fg=ICLBlue} % Title text color
+	\setbeamercolor{title page subtitle}{fg=ICLBlue} % Subtitle text color
+	\setbeamercolor{author}{fg=ICLBlue} % Author(s) text color
+	\setbeamercolor{inst}{fg=ICLBlue} % Author(s) Institutions text color
+	\setbeamercolor{date}{fg=ICLBlue} % Date text color
+	\setbeamertemplate{title page}[logo]{ICL_Logo_Blue.pdf} % Imperial logo color, use 'ICL_Logo_White.pdf' for white and 'ICL_Logo_Blue.pdf' for blue
+	\frame[plain, s]{\titlepage} % Output the title page with no footer ('plain') and vertically distributed text ('s')
+	\endgroup
+
+	%------------------------------------------------
+
+	% Full page image background title slide example
+
+	\begingroup
+	\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{190211_dowker_fay_001.jpg}} % Slide background image
+	\setbeamercolor{title page title}{fg=white} % Title text color
+	\setbeamercolor{title page subtitle}{fg=white} % Subtitle text color
+	\setbeamercolor{author}{fg=white} % Author(s) text color
+	\setbeamercolor{inst}{fg=white} % Author(s) Institutions text color
+	\setbeamercolor{date}{fg=white} % Date text color
+	\setbeamertemplate{title page}[logo]{ICL_Logo_White.pdf} % Imperial logo color, use 'ICL_Logo_White.pdf' for white and 'ICL_Logo_Blue.pdf' for blue
+	\frame[plain, s]{\titlepage} % Output the title page with no footer ('plain') and vertically distributed text ('s')
+	\endgroup
+\fi
+%----------------------------------------------------------------------------------------
+%	AGENDA SLIDES
+%----------------------------------------------------------------------------------------
+
+% White agenda slide
+
+% \begingroup
+% \setbeamercolor{normal text}{fg=ICLBlue}\usebeamercolor[fg]{normal text} % Slide text color
+
+% \begin{frame}
+% 	\begin{columns}[T] % [T] ensures correct vertical alignment
+% 		\begin{column}{0.48\linewidth} % Left column
+% 			\HUGE\textbf{Agenda}
+% 		\end{column}
+% 		\begin{column}{0.48\linewidth} % Right column
+% 			\textbf{01}\tabto{0.125\linewidth} Who we are\\ % Use \tabto{<length>} to add a fixed horizontal whitespace
+% 			\textbf{02}\tabto{0.125\linewidth} What we do\\
+% 			\textbf{03}\tabto{0.125\linewidth} Our process\\
+% 			\textbf{04}\tabto{0.125\linewidth} Our services\\
+% 			\textbf{05}\tabto{0.125\linewidth} Who we do it for\\
+% 			\textbf{06}\tabto{0.125\linewidth} Lorem ipsum\\
+% 			\textbf{07}\tabto{0.125\linewidth} Dolor amet\\
+% 			\textbf{08}\tabto{0.125\linewidth} Oluptibus autud
+
+% 			\textbf{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor arcu luctus, imperdiet urna iaculis, mattis eros.}
+% 		\end{column}
+% 	\end{columns}
+% \end{frame}
+% \endgroup
+
+%------------------------------------------------
+
+% % Blue agenda slide
+
+% \begingroup
+% \setbeamercolor{background canvas}{bg=ICLBlue} % Slide background color
+% \setbeamercolor{normal text}{fg=white}\usebeamercolor[fg]{normal text} % Slide text color
+% \setbeamercolor{page number in head/foot}{fg=white} % Footer text color
+
+% \begin{frame}
+% 	\begin{columns}[T] % [T] ensures correct vertical alignment
+% 		\begin{column}{0.48\linewidth} % Left column
+% 			\HUGE\textbf{Agenda}
+% 		\end{column}
+% 		\begin{column}{0.48\linewidth} % Right column
+% 			\textbf{01}\tabto{0.125\linewidth} Who we are\\ % Use \tabto{<length>} to add a fixed horizontal whitespace
+% 			\textbf{02}\tabto{0.125\linewidth} What we do\\
+% 			\textbf{03}\tabto{0.125\linewidth} Our process\\
+% 			\textbf{04}\tabto{0.125\linewidth} Our services\\
+% 			\textbf{05}\tabto{0.125\linewidth} Who we do it for\\
+% 			\textbf{06}\tabto{0.125\linewidth} Lorem ipsum\\
+% 			\textbf{07}\tabto{0.125\linewidth} Dolor amet\\
+% 			\textbf{08}\tabto{0.125\linewidth} Oluptibus autud
+
+% 			\textbf{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor arcu luctus, imperdiet urna iaculis, mattis eros.}
+% 		\end{column}
+% 	\end{columns}
+% \end{frame}
+% \endgroup
+
+%----------------------------------------------------------------------------------------
+%	LEAN CODE EXAMPLE SLIDES
+%----------------------------------------------------------------------------------------
+
+\section{Group Action Definition}
+
+\begin{frame}
+	\framesubtitle{GroupAction Class Definition}
+
+	\begin{definition}[Group Action]
+		A group action of a group $G$ on a set $X$ is a map $\cdot : G \times X \to X$ satisfying:
+		\begin{itemize}
+			\item (Compatibility) $(g_1 g_2)\cdot x = g_1\cdot(g_2\cdot x)$
+			\item (Identity) $1\cdot x = x$
+		\end{itemize}
+	\end{definition}
+
+	\vspace{0.5cm}
+
+	\leancodefile[
+		firstline=12,
+		lastline=22,
+		firstnumber=12
+	]{../../lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/main/lean/GroupAction/Defs.lean}
+\end{frame}
+
+%------------------------------------------------
+
+\section{Faithful and Transitive Actions}
+
+\begin{frame}
+	\framesubtitle{Faithful and Transitive Actions}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\textwidth}
+			\textbf{Faithful Action}\\
+			An action is faithful if distinct group elements induce distinct permutations:
+			\[
+				(\forall x \in X,\; g_1 \cdot x = g_2 \cdot x) \implies g_1 = g_2
+			\]
+
+			\leancodefile[
+				firstline=25,
+				lastline=26,
+				firstnumber=25
+			]{../../lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/main/lean/GroupAction/Defs.lean}
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\textbf{Transitive Action}\\
+			An action is transitive if any two elements can be connected:
+			\[
+				\forall x_1, x_2 \in X,\; \exists g \in G \text{ s.t. } g \cdot x_1 = x_2
+			\]
+
+			\leancodefile[
+				firstline=33,
+				lastline=40,
+				firstnumber=33
+			]{../../lean/GroupAction/Defs.lean}{https://github.com/FrankieeW/GroupAction/blob/main/lean/GroupAction/Defs.lean}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\section{Permutation Representation}
+
+\begin{frame}
+	\framesubtitle{Permutation Representation}
+
+	For each $g \in G$, define $\sigma_g : X \to X$ by $\sigma_g(x) = g \cdot x$. This yields the permutation representation $\phi : G \to \mathrm{Sym}(X)$.
+
+	% \leancodefile[
+	% 	firstline=27,
+	% 	lastline=30,
+	% 	firstnumber=27
+	% ]{../../lean/GroupAction/Permutation.lean}{https://github.com/FrankieeW/GroupAction/blob/main/lean/GroupAction/Permutation.lean}
+\end{frame}
+
+%------------------------------------------------
+
+\section{Stabilizer Subgroup}
+
+\begin{frame}
+	\framesubtitle{Stabilizer Subgroup}
+
+	For $x \in X$, the stabilizer is $G_x = \{\, g \in G \mid g \cdot x = x \,\}$.
+
+	% \leancodefile[
+	% 	firstline=24,
+	% 	lastline=25,
+	% 	firstnumber=24
+	% ]{../../lean/GroupAction/Stabilizer.lean}{https://github.com/FrankieeW/GroupAction/blob/main/lean/GroupAction/Stabilizer.lean}
+
+	\textbf{Theorem:} $G_x$ is a subgroup of $G$.
+\end{frame}
+
+%------------------------------------------------
+
+\section{Examples}
+
+\begin{frame}
+	\framesubtitle{Symmetric Group Action}
+
+	The symmetric group $\mathrm{Sym}(X)$ acts on $X$ by evaluation: $\sigma \cdot x := \sigma(x)$.
+
+	% \leancodefile[
+	% 	firstline=21,
+	% 	lastline=28,
+	% 	firstnumber=21
+	% ]{../../lean/GroupAction/Examples.lean}{https://github.com/FrankieeW/GroupAction/blob/main/lean/GroupAction/Examples.lean}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
